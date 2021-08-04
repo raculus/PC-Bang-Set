@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C72A33F6-513E-46CB-A264-B619BB2D2397}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Game_Set</RootNamespace>
-    <AssemblyName>Game-Set</AssemblyName>
+    <RootNamespace>PC_Bang_Set</RootNamespace>
+    <AssemblyName>PC-Bang-Set</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

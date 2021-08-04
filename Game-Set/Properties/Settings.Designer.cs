@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Game_Set.Properties {
+namespace PC_Bang_Set.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

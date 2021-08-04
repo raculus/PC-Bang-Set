@@ -1,0 +1,14 @@
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\bin\Debug\Game-Set.exe.config
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\bin\Debug\Game-Set.exe
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\bin\Debug\Game-Set.pdb
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game-Set.csproj.AssemblyReference.cache
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game_Set.Form_Main.resources
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game_Set.Properties.Resources.resources
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game-Set.csproj.GenerateResource.cache
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game-Set.csproj.CoreCompileInputs.cache
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game-Set.exe
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game-Set.pdb
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\bin\Debug\Microsoft.Xaml.Behaviors.xml
+C:\Users\muhjh\OneDrive\문서\Git\Game-Set\Game-Set\obj\Debug\Game-Set.csproj.CopyComplete

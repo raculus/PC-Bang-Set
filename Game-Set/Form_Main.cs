@@ -94,14 +94,9 @@ namespace Game_Set
         private void gpu_driver()
         {
             string url = krokr("gpu");
-            try
-            {
-                Process.Start("chrome \"" + url + "\"");
-            }
-            catch
-            {
-                Process.Start(url);
-            }
+            var startInfo = new ProcessStartInfo("chrome.exe");
+            startInfo.Arguments = url;
+            Process.Start(startInfo);
         }
         private void button_Apply_Click(object sender, EventArgs e)
         {

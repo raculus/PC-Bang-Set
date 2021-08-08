@@ -103,25 +103,34 @@ namespace Game_Set
             foreach(string checkedItem in checkedListBox1.CheckedItems)
             {
                 int index = checkedListBox1.Items.IndexOf(checkedItem);
-                if(index == 0)
+                if (index == 0)
                 {
                     //오버워치 그래픽 설정
                     apply_ow_setting();
                 }
-                else if(index == 1)
+                else if (index == 1)
                 {
                     //포인터 정확도 끄기
                     PointerAccel(false);
                 }
-                else if(index == 2)
+                else if (index == 2)
                 {
                     //지포스 드라이버 다운로드
                     gpu_driver();
                 }
-                else if(index == 3)
+                else if (index == 3)
                 {
                     //불필요 프로세스 끄기
                     kill_useless_process();
+                }
+                else if (index == 4)
+                {
+                    string battlenet = @"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe";
+                    if (File.Exists(battlenet))
+                        Process.Start(battlenet);
+                    else
+                    {
+                    }
                 }
             }
         }

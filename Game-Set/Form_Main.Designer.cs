@@ -41,7 +41,8 @@ namespace Game_Set
             "오버워치 그래픽 설정",
             "포인터 정확도 끄기",
             "지포스 드라이버 다운로드",
-            "불필요 프로세스 끄기"});
+            "불필요 프로세스 끄기",
+            "배틀넷 열기"});
             this.checkedListBox1.Location = new System.Drawing.Point(12, 13);
             this.checkedListBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.checkedListBox1.Name = "checkedListBox1";
@@ -66,7 +67,7 @@ namespace Game_Set
             this.ClientSize = new System.Drawing.Size(237, 277);
             this.Controls.Add(this.button_Apply);
             this.Controls.Add(this.checkedListBox1);
-            this.Font = new System.Drawing.Font("맑은 고딕", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.Font = new System.Drawing.Font("Malgun Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;

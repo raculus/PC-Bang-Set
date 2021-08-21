@@ -83,7 +83,7 @@ namespace Game_Set
         }
         private void kill_useless_process()
         {
-            string useless = "MainTitleFor2Dx,LCore,POOQLauncher,PWLauncher,LuniparkAgent,마스크";
+            string useless = "MainTitleFor2Dx,LCore,POOQLauncher,PWLauncher,LuniparkAgent,마스크,LuniparkDashboard";
             foreach(var name in useless.Split(','))
             {
                 Process[] processList = Process.GetProcessesByName(name);

@@ -42,7 +42,8 @@ namespace Game_Set
             "포인터 정확도 끄기",
             "지포스 드라이버 다운로드",
             "불필요 프로세스 끄기",
-            "배틀넷 열기"});
+            "배틀넷 열기",
+            "에이펙스 설정"});
             this.checkedListBox1.Location = new System.Drawing.Point(12, 13);
             this.checkedListBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.checkedListBox1.Name = "checkedListBox1";

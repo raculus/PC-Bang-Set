@@ -98,6 +98,16 @@ namespace Game_Set
             startInfo.Arguments = url;
             Process.Start(startInfo);
         }
+        private void apex_settings()
+        {
+            string userPath = System.Environment.GetEnvironmentVariable("USERPROFILE");
+            userPath += @"\Saved Games\Respawn\Apex\local\videoconfig.txt";
+            Downloader(krokr("apex-setting"), userPath);
+            FileInfo fi = new FileInfo(userPath);
+            fi.IsReadOnly = true;
+
+
+        }
         private void button_Apply_Click(object sender, EventArgs e)
         {
             foreach(string checkedItem in checkedListBox1.CheckedItems)
@@ -131,6 +141,10 @@ namespace Game_Set
                     else
                     {
                     }
+                }
+                else if(index == 5)
+                {
+                    apex_settings();
                 }
             }
         }

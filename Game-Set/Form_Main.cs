@@ -60,6 +60,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("불필요 프로세스 종료");
             checkedListBox1.Items.Add("배틀넷 켜기");
             checkedListBox1.Items.Add("에이펙스 설정");
+            checkedListBox1.Items.Add("오버워치 더 작은창모드");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
@@ -126,9 +127,14 @@ namespace Game_Set
             Downloader(krokr("apex-setting"), userPath);
             FileInfo fi = new FileInfo(userPath);
             fi.IsReadOnly = true;
-
-
         }
+        private void small_overwatch()
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            path += "오버워치 작은창모드.exe";
+            Downloader(krokr("ow-small"), path);
+        }
+
         private void button_Apply_Click(object sender, EventArgs e)
         {
             foreach(string checkedItem in checkedListBox1.CheckedItems)
@@ -167,6 +173,10 @@ namespace Game_Set
                 {
                     apex_settings();
                     Clipboard.SetText("+exec autoexec.cfg -dev");
+                }
+                else if(index == 6)
+                {
+                    small_overwatch();
                 }
             }
         }

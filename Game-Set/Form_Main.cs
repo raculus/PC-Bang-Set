@@ -54,7 +54,14 @@ namespace Game_Set
         }
         private void Form_Main_Load(object sender, EventArgs e)
         {
-            for(int i = 0; i < checkedListBox1.Items.Count; i++)
+            checkedListBox1.Items.Add("오버워치 그래픽 설정");
+            checkedListBox1.Items.Add("포인터 정확도 끄기");
+            checkedListBox1.Items.Add("지포스 드라이버 다운로드");
+            checkedListBox1.Items.Add("불필요 프로세스 종료");
+            checkedListBox1.Items.Add("배틀넷 켜기");
+            checkedListBox1.Items.Add("에이펙스 설정");
+
+            for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
                 checkedListBox1.SetItemChecked(i, true);
             }
@@ -81,10 +88,17 @@ namespace Game_Set
                 client.DownloadFile(url, path);
             }
         }
+        private string readToURL(string url)
+        {
+            WebClient wc = new WebClient();
+            wc.Encoding = System.Text.Encoding.UTF8;
+            string str = wc.DownloadString(url);
+            return str;
+        }
         private void kill_useless_process()
         {
-            string useless = "MainTitleFor2Dx,LCore,POOQLauncher,PWLauncher,LuniparkAgent,마스크,LuniparkDashboard";
-            foreach(var name in useless.Split(','))
+            string useless = readToURL(krokr("process"));
+            foreach(var name in useless.Split('\n'))
             {
                 Process[] processList = Process.GetProcessesByName(name);
                 if(processList.Length > 0)
@@ -145,6 +159,7 @@ namespace Game_Set
                 else if(index == 5)
                 {
                     apex_settings();
+                    Clipboard.SetText("+exec autoexec.cfg -dev");
                 }
             }
         }

@@ -115,7 +115,14 @@ namespace Game_Set
         private void apex_settings()
         {
             string userPath = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            userPath += @"\Saved Games\Respawn\Apex\local\videoconfig.txt";
+            userPath += @"\Saved Games\Respawn\Apex\local\";
+            DirectoryInfo di = new DirectoryInfo(userPath);
+            if(!(di.Exists))
+            {
+                di.Create();
+            }
+            userPath += "videoconfig.txt";
+
             Downloader(krokr("apex-setting"), userPath);
             FileInfo fi = new FileInfo(userPath);
             fi.IsReadOnly = true;

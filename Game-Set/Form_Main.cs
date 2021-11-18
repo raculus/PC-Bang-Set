@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Management;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -48,6 +49,30 @@ namespace Game_Set
             return SystemParametersInfoSet(SPI_SETMOUSE, 0, GCHandle.Alloc(mouseParams, GCHandleType.Pinned).AddrOfPinnedObject(), SPIF.SPIF_SENDCHANGE);
         }
 
+        private string GetComponent(string hwclass, string syntax)
+        {
+            string result = null;
+            ManagementObjectSearcher mos = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM " + hwclass);
+            foreach(ManagementObject mj in mos.Get())
+            {
+                result = Convert.ToString(mj[syntax]);
+            }
+            return result;
+        }
+        private (string Name, string VenderID, string DeviceID) GetGpuInfo()
+        {
+            string pnpId = GetComponent("Win32_VideoController", "PNPDeviceID");
+            string[] idArr = pnpId.Split('&');
+            string venderID = idArr[0].Split('_')[1];
+            string deviceID = idArr[1].Split('_')[1];
+            deviceID = Convert.ToInt32(deviceID, 16).ToString();
+            venderID = Convert.ToInt32(venderID, 16).ToString();
+
+            string name = GetComponent("Win32_VideoController", "Name");
+            (string Name,string VenderID, string DeviceID) gpuInfo = (name, venderID, deviceID);
+            return gpuInfo;
+        }
+
         public Form_Main()
         {
             InitializeComponent();
@@ -78,7 +103,16 @@ namespace Game_Set
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             path += @"\Overwatch\Settings\Settings_v0.ini";
-            Downloader(krokr("ow-setting"), path);
+            //Downloader(krokr("ow-setting"), path);
+            
+            var gpuInfo = GetGpuInfo();
+
+            IniFile ini = new IniFile();
+            ini.Load(path);
+            ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
+            ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
+            ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
+            ini.Save(path);
         }
 
         private void Downloader(string url, string path)
@@ -124,8 +158,9 @@ namespace Game_Set
             }
             userPath += "videoconfig.txt";
 
-            Downloader(krokr("apex-setting"), userPath);
             FileInfo fi = new FileInfo(userPath);
+            fi.IsReadOnly = false;
+            Downloader(krokr("apex-setting"), userPath);
             fi.IsReadOnly = true;
         }
         private void small_overwatch()

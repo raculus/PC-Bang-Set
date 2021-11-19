@@ -119,6 +119,7 @@ namespace Game_Set
         {
             using (var client = new WebClient())
             {
+                ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 client.DownloadFile(url, path);
             }
@@ -127,6 +128,9 @@ namespace Game_Set
         {
             WebClient wc = new WebClient();
             wc.Encoding = System.Text.Encoding.UTF8;
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             string str = wc.DownloadString(url);
             return str;
         }

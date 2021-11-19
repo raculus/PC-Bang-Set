@@ -163,8 +163,14 @@ namespace Game_Set
             userPath += "videoconfig.txt";
 
             FileInfo fi = new FileInfo(userPath);
-            fi.IsReadOnly = false;
-            Downloader(krokr("apex-setting"), userPath);
+            if (fi.Exists)
+            {
+                fi.IsReadOnly = false;
+            }
+            else
+            {
+                Downloader(krokr("apex-setting"), userPath);
+            }
             fi.IsReadOnly = true;
         }
         private void small_overwatch()

@@ -30,6 +30,7 @@ namespace Game_Set
         }
 
         // http://stackoverflow.com/questions/24737775/toggle-enhance-pointer-precision
+        // 포인터 정확도 향상 끄기용
         [DllImport("user32.dll", EntryPoint = "SystemParametersInfo", SetLastError = true)]
         public static extern bool SystemParametersInfoGet(uint action, uint param, IntPtr vparam, SPIF fWinIni);
         [DllImport("user32.dll", EntryPoint = "SystemParametersInfo", SetLastError = true)]
@@ -37,6 +38,9 @@ namespace Game_Set
 
         public const UInt32 SPI_GETMOUSE = 0x0003;
         public const UInt32 SPI_SETMOUSE = 0x0004;
+        // 창 사이즈 조절용
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
         public static bool PointerAccel(bool b)
         {
@@ -47,6 +51,17 @@ namespace Game_Set
             mouseParams[2] = b ? 1 : 0;
             // Update the system setting.
             return SystemParametersInfoSet(SPI_SETMOUSE, 0, GCHandle.Alloc(mouseParams, GCHandleType.Pinned).AddrOfPinnedObject(), SPIF.SPIF_SENDCHANGE);
+        }
+
+
+        private void ChangeWindowSize(string title, int width, int height)
+        {
+            Process[] proc = Process.GetProcessesByName(title);
+            foreach (Process p in proc)
+            {
+                IntPtr handle = p.MainWindowHandle;
+                MoveWindow(handle, 10, 10, width, height, true);
+            }
         }
 
         private string GetComponent(string hwclass, string syntax)
@@ -98,12 +113,22 @@ namespace Game_Set
             url += sub + ".kotlin.kro.kr";
             return url;
         }
+        private void ifNotExistDir(string path)
+        {
+            DirectoryInfo di = new DirectoryInfo(path);
+            if (!(di.Exists))
+            {
+                di.Create();
+            }
+        }
 
         private void apply_ow_setting()
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            path += @"\Overwatch\Settings\Settings_v0.ini";
-            //Downloader(krokr("ow-setting"), path);
+            path += @"\Overwatch\Settings\";
+            ifNotExistDir(path);
+            path += @"Settings_v0.ini";
+            Downloader(krokr("ow-setting"), path);
             
             var gpuInfo = GetGpuInfo();
 
@@ -155,11 +180,7 @@ namespace Game_Set
         {
             string userPath = System.Environment.GetEnvironmentVariable("USERPROFILE");
             userPath += @"\Saved Games\Respawn\Apex\local\";
-            DirectoryInfo di = new DirectoryInfo(userPath);
-            if(!(di.Exists))
-            {
-                di.Create();
-            }
+            ifNotExistDir(userPath);
             userPath += "videoconfig.txt";
 
             FileInfo fi = new FileInfo(userPath);
@@ -175,9 +196,8 @@ namespace Game_Set
         }
         private void small_overwatch()
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            path += "오버워치 작은창모드.exe";
-            Downloader(krokr("ow-small"), path);
+            ChangeWindowSize("overwatch", 640, 480);
+            
         }
 
         private void button_Apply_Click(object sender, EventArgs e)

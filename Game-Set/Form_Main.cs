@@ -60,32 +60,8 @@ namespace Game_Set
             foreach (Process p in proc)
             {
                 IntPtr handle = p.MainWindowHandle;
-                MoveWindow(handle, 10, 10, width, height, true);
+                MoveWindow(handle, 3, 3, width, height, true);
             }
-        }
-
-        private string GetComponent(string hwclass, string syntax)
-        {
-            string result = null;
-            ManagementObjectSearcher mos = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM " + hwclass);
-            foreach(ManagementObject mj in mos.Get())
-            {
-                result = Convert.ToString(mj[syntax]);
-            }
-            return result;
-        }
-        private (string Name, string VenderID, string DeviceID) GetGpuInfo()
-        {
-            string pnpId = GetComponent("Win32_VideoController", "PNPDeviceID");
-            string[] idArr = pnpId.Split('&');
-            string venderID = idArr[0].Split('_')[1];
-            string deviceID = idArr[1].Split('_')[1];
-            deviceID = Convert.ToInt32(deviceID, 16).ToString();
-            venderID = Convert.ToInt32(venderID, 16).ToString();
-
-            string name = GetComponent("Win32_VideoController", "Name");
-            (string Name,string VenderID, string DeviceID) gpuInfo = (name, venderID, deviceID);
-            return gpuInfo;
         }
 
         public Form_Main()
@@ -129,14 +105,19 @@ namespace Game_Set
             ifNotExistDir(path);
             path += @"Settings_v0.ini";
             Downloader(krokr("ow-setting"), path);
-            
-            var gpuInfo = GetGpuInfo();
+
+            Get get = new Get();
+            var gpuInfo = get.GpuInfo();
+            int freq = get.DisplayFreq();
 
             IniFile ini = new IniFile();
             ini.Load(path);
             ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
             ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
             ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
+
+            ini["Render.13"]["FrameRateCap"] = freq-3;
+            ini["Render.13"]["FullScreenRefresh"] = freq;
             ini.Save(path);
         }
 
@@ -152,7 +133,7 @@ namespace Game_Set
         private string readToURL(string url)
         {
             WebClient wc = new WebClient();
-            wc.Encoding = System.Text.Encoding.UTF8;
+            wc.Encoding = Encoding.UTF8;
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -162,8 +143,11 @@ namespace Game_Set
         private void kill_useless_process()
         {
             string useless = readToURL(krokr("process"));
-            foreach(var name in useless.Split('\n'))
+            foreach(string name in useless.Split('\n'))
             {
+                if (name == "")
+                    continue;
+                Console.WriteLine("Process Kill: "+name);
                 Process[] processList = Process.GetProcessesByName(name);
                 if(processList.Length > 0)
                     processList[0].Kill();
@@ -244,6 +228,7 @@ namespace Game_Set
                     small_overwatch();
                 }
             }
+            MessageBox.Show("완료했습니다.");
         }
     }
 }

@@ -9,3 +9,7 @@ vollehtv
 Lghub
 LGhub_Updater
 OP.GGforDesktop
+PFGMClient
+PFControlMgr
+picatbum
+ClassicStartMenu

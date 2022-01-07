@@ -7,4 +7,5 @@ LuniparkAgent
 LuniparkDashboard
 vollehtv
 Lghub
+LGhub_Updater
 OP.GGforDesktop

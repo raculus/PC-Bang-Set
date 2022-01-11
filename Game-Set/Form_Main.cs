@@ -221,7 +221,14 @@ namespace Game_Set
                 else if(index == 5)
                 {
                     apex_settings();
-                    Clipboard.SetText("+exec autoexec.cfg -dev");
+                    Get get = new Get();
+                    int freq = get.DisplayFreq();
+
+                    string str = readToURL(krokr("apex-startopt"));
+                    str += " +fps_max \"";
+                    str += freq - 2 + "\"";
+
+                    Clipboard.SetText(str);
                 }
                 else if(index == 6)
                 {

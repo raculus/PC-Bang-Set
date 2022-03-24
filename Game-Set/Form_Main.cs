@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace Game_Set
 {
@@ -77,6 +78,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("배틀넷 켜기");
             checkedListBox1.Items.Add("에이펙스 설정");
             checkedListBox1.Items.Add("오버워치 더 작은창모드");
+            checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
@@ -183,6 +185,33 @@ namespace Game_Set
             ChangeWindowSize("overwatch", 640, 480);
             
         }
+        private void remove_pubg_intro()
+        {
+            string path;
+            const string regPath = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PLAYERUNKNOWN'S BATTLEGROUNDS";
+            RegistryKey reg = Registry.LocalMachine.OpenSubKey(regPath);
+            if (reg != null)
+            {
+                var val = reg.GetValue("InstallLocation");
+                if (val != null)
+                {
+                    path = val.ToString();
+                    path += @"\TslGame\Content\Movies";
+                    var di = new DirectoryInfo(path);
+                    if (di.Exists)
+                    {
+                        di.Delete(true);
+                        di.Create();
+                    }
+                }
+                else
+                    Debug.WriteLine("sub reg null");
+            }
+            else
+            {
+                Debug.WriteLine("reg null");
+            }
+        }
 
         private void button_Apply_Click(object sender, EventArgs e)
         {
@@ -233,6 +262,10 @@ namespace Game_Set
                 else if(index == 6)
                 {
                     small_overwatch();
+                }
+                else if(index == 7)
+                {
+                    remove_pubg_intro();
                 }
             }
             MessageBox.Show("완료했습니다.");

@@ -187,29 +187,33 @@ namespace Game_Set
         }
         private void remove_pubg_intro()
         {
+            List<string> regList = new List<string>();
             string path;
-            const string regPath = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\PLAYERUNKNOWN'S BATTLEGROUNDS";
-            RegistryKey reg = Registry.LocalMachine.OpenSubKey(regPath);
-            if (reg != null)
+            regList.Add(@"SOFTWARE\DaumGames\PUBG");
+            foreach (string regPath in regList)
             {
-                var val = reg.GetValue("InstallLocation");
-                if (val != null)
+                RegistryKey reg = Registry.CurrentUser.OpenSubKey(regPath);
+                if (reg != null)
                 {
-                    path = val.ToString();
-                    path += @"\TslGame\Content\Movies";
-                    var di = new DirectoryInfo(path);
-                    if (di.Exists)
+                    var val = reg.GetValue("InstallPath");
+                    if (val != null)
                     {
-                        di.Delete(true);
-                        di.Create();
+                        path = val.ToString();
+                        path += @"\TslGame\Content\Movies";
+                        var di = new DirectoryInfo(path);
+                        if (di.Exists)
+                        {
+                            di.Delete(true);
+                            di.Create();
+                        }
                     }
+                    else
+                        Debug.WriteLine("sub reg null");
                 }
                 else
-                    Debug.WriteLine("sub reg null");
-            }
-            else
-            {
-                Debug.WriteLine("reg null");
+                {
+                    Debug.WriteLine("reg null");
+                }
             }
         }
 

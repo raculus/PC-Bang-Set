@@ -17,6 +17,12 @@ Gui, Show, , AutoInstall
 
 Gui, Submit, NoHide
 
+if !FileExist("nvidia_driver.exe"){
+    ProgressAdd("오류: nvidia_driver.exe가 없습니다.",0)
+    Run, "http://gpu.kotlin.kro.kr"
+    ExitApp
+}
+
 Run, nvidia_driver.exe
 ProgressAdd("파일 실행", 20)
 

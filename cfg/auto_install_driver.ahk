@@ -10,18 +10,21 @@ if not A_IsAdmin
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-Gui, Add, ListBox, vMyList,
-Gui, Add, Progress, vMyProgress
+Gui, Add, ListBox,w200 h180 vMyList,
+Gui, Add, Progress,w200 h20 vMyProgress, 0
 Gui, +AlwaysOnTop
-Gui, Show, , AutoInstall
+Gui, Show,w220 h210, AutoInstall
 
 Gui, Submit, NoHide
 
-if !FileExist("nvidia_driver.exe"){
-    ProgressAdd("오류: nvidia_driver.exe가 없습니다.",0)
-    Run, "http://gpu.kotlin.kro.kr"
-    ExitApp
+ProgressAdd("nvidia_driver.exe 기다리는 중")
+Loop
+{
+    if FileExist("nvidia_driver.exe"){
+        Break
+    }
 }
+
 
 Run, nvidia_driver.exe
 ProgressAdd("파일 실행", 20)
@@ -51,7 +54,7 @@ Loop, countdown
 }
 ExitApp
 
-ProgressAdd(jobLabel, num){
+ProgressAdd(jobLabel, num=0){
     Gui, Submit, NoHide
     GuiControl, , MyList, %jobLabel%
     GuiControl, , MyProgress, +%num%

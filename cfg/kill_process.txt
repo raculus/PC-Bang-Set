@@ -12,3 +12,5 @@ PFGMClient
 PFControlMgr
 picatbum
 ClassicStartMenu
+afreecatvpackage
+logitechg_discord

@@ -161,7 +161,6 @@ namespace Game_Set
             var startInfo = new ProcessStartInfo("chrome.exe");
             startInfo.Arguments = url;
             Process.Start(startInfo);
-            Downloader(krokr("autoinstall"),"autoInstaller.exe");
         }
         private void apex_settings()
         {
@@ -273,7 +272,7 @@ namespace Game_Set
                     remove_pubg_intro();
                 }
             }
-            MessageBox.Show("완료했습니다.");
+            Application.Exit();
         }
     }
 }

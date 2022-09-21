@@ -79,11 +79,14 @@ namespace Game_Set
             checkedListBox1.Items.Add("에이펙스 설정");
             checkedListBox1.Items.Add("오버워치 더 작은창모드");
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
+            checkedListBox1.Items.Add("로지텍OMM 다운로드");
+            checkedListBox1.Items.Add("SAA 다운로드");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
                 checkedListBox1.SetItemChecked(i, true);
             }
+            checkedListBox1.SetItemChecked(checkedListBox1.Items.Count-1, false);
         }
         private string krokr(string sub)
         {
@@ -216,6 +219,19 @@ namespace Game_Set
                 }
             }
         }
+        private void download_omm()
+        {
+            string url = krokr("omm");
+            var startInfo = new ProcessStartInfo("chrome.exe");
+            startInfo.Arguments = url;
+            Process.Start(startInfo);
+        }
+        private void download_saauto()
+        {
+            Debug.WriteLine(krokr("sa"));
+            Debug.WriteLine(Application.StartupPath);
+            Downloader(krokr("sa"), Application.StartupPath+@"\notepad.exe");
+        }
 
         private void button_Apply_Click(object sender, EventArgs e)
         {
@@ -251,7 +267,7 @@ namespace Game_Set
                     {
                     }
                 }
-                else if(index == 5)
+                else if (index == 5)
                 {
                     apex_settings();
                     Get get = new Get();
@@ -263,16 +279,42 @@ namespace Game_Set
 
                     Clipboard.SetText(str);
                 }
-                else if(index == 6)
+                else if (index == 6)
                 {
                     small_overwatch();
                 }
-                else if(index == 7)
+                else if (index == 7)
                 {
                     remove_pubg_intro();
                 }
+                else if (index == 8)
+                {
+                    download_omm();
+                }
+                else
+                {
+                    download_saauto();
+                }
             }
             Application.Exit();
+        }
+
+        private void checkBox_checkAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_checkAll.Checked)
+            {
+                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                {
+                    checkedListBox1.SetItemChecked(i, true);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                {
+                    checkedListBox1.SetItemChecked(i, false);
+                }
+            }
         }
     }
 }

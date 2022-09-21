@@ -31,13 +31,14 @@ namespace Game_Set
         {
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.button_Apply = new System.Windows.Forms.Button();
+            this.checkBox_checkAll = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkedListBox1
             // 
             this.checkedListBox1.CheckOnClick = true;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(12, 13);
+            this.checkedListBox1.Location = new System.Drawing.Point(12, 42);
             this.checkedListBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(213, 204);
@@ -45,7 +46,7 @@ namespace Game_Set
             // 
             // button_Apply
             // 
-            this.button_Apply.Location = new System.Drawing.Point(12, 228);
+            this.button_Apply.Location = new System.Drawing.Point(12, 253);
             this.button_Apply.Name = "button_Apply";
             this.button_Apply.Size = new System.Drawing.Size(213, 37);
             this.button_Apply.TabIndex = 1;
@@ -53,12 +54,24 @@ namespace Game_Set
             this.button_Apply.UseVisualStyleBackColor = true;
             this.button_Apply.Click += new System.EventHandler(this.button_Apply_Click);
             // 
+            // checkBox_checkAll
+            // 
+            this.checkBox_checkAll.AutoSize = true;
+            this.checkBox_checkAll.Location = new System.Drawing.Point(12, 12);
+            this.checkBox_checkAll.Name = "checkBox_checkAll";
+            this.checkBox_checkAll.Size = new System.Drawing.Size(79, 21);
+            this.checkBox_checkAll.TabIndex = 3;
+            this.checkBox_checkAll.Text = "모두선택";
+            this.checkBox_checkAll.UseVisualStyleBackColor = true;
+            this.checkBox_checkAll.CheckedChanged += new System.EventHandler(this.checkBox_checkAll_CheckedChanged);
+            // 
             // Form_Main
             // 
             this.AcceptButton = this.button_Apply;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(237, 277);
+            this.ClientSize = new System.Drawing.Size(237, 303);
+            this.Controls.Add(this.checkBox_checkAll);
             this.Controls.Add(this.button_Apply);
             this.Controls.Add(this.checkedListBox1);
             this.Font = new System.Drawing.Font("Malgun Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -70,6 +83,7 @@ namespace Game_Set
             this.Text = "PCBang-Set";
             this.Load += new System.EventHandler(this.Form_Main_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -77,6 +91,7 @@ namespace Game_Set
 
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Button button_Apply;
+        private System.Windows.Forms.CheckBox checkBox_checkAll;
     }
 }
 

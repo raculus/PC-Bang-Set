@@ -29,6 +29,7 @@ namespace Game_Set
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Main));
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.button_Apply = new System.Windows.Forms.Button();
             this.checkBox_checkAll = new System.Windows.Forms.CheckBox();
@@ -41,7 +42,7 @@ namespace Game_Set
             this.checkedListBox1.Location = new System.Drawing.Point(12, 42);
             this.checkedListBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(213, 204);
+            this.checkedListBox1.Size = new System.Drawing.Size(213, 199);
             this.checkedListBox1.TabIndex = 0;
             // 
             // button_Apply
@@ -59,7 +60,7 @@ namespace Game_Set
             this.checkBox_checkAll.AutoSize = true;
             this.checkBox_checkAll.Location = new System.Drawing.Point(12, 12);
             this.checkBox_checkAll.Name = "checkBox_checkAll";
-            this.checkBox_checkAll.Size = new System.Drawing.Size(79, 21);
+            this.checkBox_checkAll.Size = new System.Drawing.Size(151, 40);
             this.checkBox_checkAll.TabIndex = 3;
             this.checkBox_checkAll.Text = "모두선택";
             this.checkBox_checkAll.UseVisualStyleBackColor = true;
@@ -68,7 +69,7 @@ namespace Game_Set
             // Form_Main
             // 
             this.AcceptButton = this.button_Apply;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 36F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(237, 303);
             this.Controls.Add(this.checkBox_checkAll);
@@ -76,6 +77,7 @@ namespace Game_Set
             this.Controls.Add(this.checkedListBox1);
             this.Font = new System.Drawing.Font("Malgun Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

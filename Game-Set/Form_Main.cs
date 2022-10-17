@@ -80,6 +80,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("오버워치 더 작은창모드");
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
+            checkedListBox1.Items.Add("서든 잡소리 삭제 다운로드");
             checkedListBox1.Items.Add("SAA 다운로드");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
@@ -226,11 +227,13 @@ namespace Game_Set
             startInfo.Arguments = url;
             Process.Start(startInfo);
         }
+        private void download_sasnd()
+        {
+            Downloader(krokr("sasnd"), Application.StartupPath+@"\서든 잡소리 삭제.exe");
+        }
         private void download_saauto()
         {
-            Debug.WriteLine(krokr("sa"));
-            Debug.WriteLine(Application.StartupPath);
-            Downloader(krokr("sa"), Application.StartupPath+@"\notepad.exe");
+            Downloader(krokr("sa"), Application.StartupPath + @"\notepad.exe");
         }
 
         private void button_Apply_Click(object sender, EventArgs e)
@@ -290,6 +293,10 @@ namespace Game_Set
                 else if (index == 8)
                 {
                     download_omm();
+                }
+                else if (index == 9)
+                {
+                    download_sasnd();
                 }
                 else
                 {

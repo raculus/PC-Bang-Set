@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
 namespace Game_Set
 {
@@ -80,7 +81,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("오버워치 더 작은창모드");
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
-            checkedListBox1.Items.Add("서든 잡소리 삭제 다운로드");
+            checkedListBox1.Items.Add("서든 설정");
             checkedListBox1.Items.Add("SAA 다운로드");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
@@ -122,7 +123,7 @@ namespace Game_Set
             ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
             ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
 
-            ini["Render.13"]["FrameRateCap"] = freq-3;
+            ini["Render.13"]["FrameRateCap"] = freq-2;
             ini["Render.13"]["FullScreenRefresh"] = freq;
             ini.Save(path);
         }
@@ -183,6 +184,10 @@ namespace Game_Set
                 Downloader(krokr("apex-setting"), userPath);
             }
             fi.IsReadOnly = true;
+
+            Downloader(krokr("apex-autoexec"), Application.StartupPath+@"autoexec.cfg");
+            string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
+            File.WriteAllText("superglide.cfg", superglide);
         }
         private void small_overwatch()
         {
@@ -227,15 +232,81 @@ namespace Game_Set
             startInfo.Arguments = url;
             Process.Start(startInfo);
         }
-        private void download_sasnd()
-        {
-            Downloader(krokr("sasnd"), Application.StartupPath+@"\서든 잡소리 삭제.exe");
-        }
         private void download_saauto()
         {
             Downloader(krokr("sa"), Application.StartupPath + @"\notepad.exe");
         }
+        private void sa_set()
+        {
+            string saPath = "";
+            RegistryKey reg = Registry.LocalMachine;
+            reg = reg.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SuddenAttack");
+            if(reg != null)
+            {
+                saPath = reg.GetValue("InstallLocation").ToString();
+                Debug.WriteLine("Registry find");
+            }
+            else
+            {
+                string msg = "서든어택 폴더를 선택해 주세요";
+                MessageBox.Show(msg);
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    string path = fbd.SelectedPath;
+                    if (path.Contains("SuddenAttack"))
+                    {
+                        saPath = path;
+                    }
+                    else
+                    {
+                        MessageBox.Show(msg);
+                        return;
+                    }
+                    Debug.WriteLine("Selected path");
+                }
+            }
+            if (saPath != null)
+            {
+                Debug.WriteLine(saPath);
+                var sa_world_snd = saPath + @"\game\sa_worlds\snd";
+                var di = new DirectoryInfo(sa_world_snd);
+                if(di.Exists)
+                {
+                    Directory.Delete(sa_world_snd, true);
+                    Directory.CreateDirectory(sa_world_snd);
+                }
 
+                //캐릭터 호흡 효과음 삭제
+                foreach(var dir in Directory.GetDirectories(saPath+ @"\game\sa_characters\customvoice\", "*"))
+                {
+                    Debug.WriteLine(dir);
+                }
+
+                //직접입력 및 디스플레이 설정
+                string file = File.ReadAllText(saPath + @"\display.cfg");
+                Regex.Replace(file, @"""HardwareCursor"" ""[0-9]""", @"""HardwareCursor"" ""1""");
+                Regex.Replace(file, @"""screenwidth"" ""[0-9]+""", @"""screenwidth"" ""1280""");
+                Regex.Replace(file, @"""screenheight"" ""[0-9]+""", @"""screenheight"" ""1024""");
+                Regex.Replace(file, @"""VSyncOnFlip"" ""[0-9]""", @"""VSyncOnFlip"" ""0""");
+                File.WriteAllText(saPath + @"\display.cfg", file);
+
+                //사운드 타격감 향상 및 기타 설정
+                string player_path = saPath + @"\profiles\player.txt";
+                IniFile ini = new IniFile();
+                ini.Load(player_path);
+                ini["Sound"]["speechsoundmultiplier"] = "0.450000f";
+                ini["Sound"]["defaultsoundmultiplier"] = "0.750000f";
+                ini["Sound"]["weaponssoundmultiplier"] = "0.450000f";
+                ini["AutoOptionSetting"]["ScreenWidth"] = "1280";
+                ini["AutoOptionSetting"]["ScreenHeight"] = "1024";
+                ini["AutoOptionSetting"]["VsyncOnFlip"] = "0";
+                ini["AutoOptionSetting"]["ShowMinimap"] = "1";
+                ini["Controls"]["Sensitivity"] = "3";
+                ini["Controls"]["InputRate"] = "0";
+                ini.Save(player_path);
+            }
+        }
         private void button_Apply_Click(object sender, EventArgs e)
         {
             foreach(string checkedItem in checkedListBox1.CheckedItems)
@@ -266,9 +337,6 @@ namespace Game_Set
                     string battlenet = @"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe";
                     if (File.Exists(battlenet))
                         Process.Start(battlenet);
-                    else
-                    {
-                    }
                 }
                 else if (index == 5)
                 {
@@ -296,7 +364,7 @@ namespace Game_Set
                 }
                 else if (index == 9)
                 {
-                    download_sasnd();
+                    sa_set();
                 }
                 else
                 {

@@ -1,0 +1,272 @@
+[Controls]
+InvertMouse= 0
+MouseLook= 1
+InputRate=0
+Sensitivity=3
+NormalTurn= 15
+FastTurn= 23
+LookUp= 25
+VehicleTurnRate= 100
+AutoCenter= 0
+UseJoystick= 0
+Axis0= 2
+Axis1= 1
+Axis2= 0
+Axis3= 0
+Axis4= 0
+Axis5= 0
+POV0= 2
+POV1= 1
+POV2= 0
+POV3= 0
+
+[Bindings]
+NextWeapon= " @ "
+PrevWeapon= " @ "
+LeanRight= "##18@ "
+DuckLock= "##6@ "
+Forward= "##17@ "
+Backward= "##31@ "
+StrafeLeft= "##30@ "
+StrafeRight= "##32@ "
+Left= "##203@ "
+Right= "##205@ "
+Strafe= "##2@ "
+Speed= "##42@ "
+Jump= "##57@ "
+Duck= "##29@ "
+TurnAround= "##14@ "
+RunLock= " @ "
+Fire= " @##3"
+Activate= "##34@ "
+Reload= "##19@ "
+NextAmmo= "##3@ "
+HolsterWeapon= "##4@ "
+LastWeapon= "##16@ "
+MoveBody= "##5@ "
+Flashlight= "##33@ "
+LookUp= "##200@ "
+LookDown= "##208@ "
+ZoomIn= " @##4"	
+Inventory= "##49@ "
+Mission= "##15@ "
+CompassToggle= "##7@ "
+Radio= "##44@ "		//Radio1
+CenterView= "##45@ "		//Radio2
+LeanLeft= "##46@ "		//Radio3
+ActRadio4= "##47@ "		//Radio4
+SendMessage= "##28@ "
+TeamMessage= "##21@ "
+ViewIntel= "##26@ "	// Sensitivity_Low
+ViewKeys= "##27@ "	// Sensitivity_High
+SpecialKey3= "##35@ "
+ClanMission= "##24@"
+Target= "##53@"
+Spray= "##36@"
+NextVismode= ""	// �߰���
+
+[Game]
+SPRadar= TRUE
+CrosshairAlpha= 159
+CrosshairRed= 255
+CrosshairGreen= 255
+CrosshairBlue= 255
+CrosshairDynamic= 1
+UseCrosshair= 1
+CrosshairStyle= 0
+Subtitles= 0
+FadeBodies= 1
+HUDLayout= 0
+MessageDur= 8
+HeadBob= 6
+Difficulty= 1
+AlwaysRun= 1
+WeaponSway= 9
+AutoWeaponSwitch= 1
+LoadScreenTips= 0
+VehicleContour= 1
+
+[Sound]
+VoiceTalkMicVol= 50
+InputVolume= -1
+SoundPack= 1
+FootStepSound= 1
+InputDevArrayIndex= -1
+VoiceTalkSpeakerVol= 50
+VCOutputVolume= 100
+VoiceTalkMicAmplify= 0
+VoiceTalkEnable= 1
+FirstVivox= 0
+MusicQuality= 0
+speechsoundmultiplier=0.450000f
+defaultsoundmultiplier=0.750000f
+weaponssoundmultiplier=0.450000f
+sound16bit= 1
+musicvolume= 100
+soundvolume= 100
+MusicEnable= 0
+SoundEnable= 1
+MicAmplify= 1
+VChatInputVol= 75
+VChatOutputVol= 75
+OutputDevLastIndex= 0
+InputDevLastIndex= 0
+VoiceChatEnable= 0
+MarkTalkPlayerEnable= 0
+
+[Multiplayer]
+Dedicated= FALSE
+MPRadar= TRUE
+DMPlayerModel= 0
+ScmdPassword= "password"
+DMPlayerSkin= 1
+AllowScmdCommands= FALSE
+Guid= "31FC1E32-E68C-4723-925C-98E8E53EF82"
+Password= "password"
+WeaponRestrictions= ""
+PlayerName= "Player"
+ClientPort= 27888
+GearRestrictions= ""
+AmmoRestrictions= ""
+GameType= 3
+LANOnly= FALSE
+PlayerModel= 0
+MaxPlayers= 16
+Port= 27888
+UsePassword= FALSE
+MPDifficulty= 1
+SkillAllowance= 10000
+FriendlyFire= TRUE
+MPPlayerDiffFactor= 0.100000f
+BandwidthClient= 5
+BandwidthServer= 5
+BandwidthServerCustom= 1500
+BandwidthClientCustom= 1500
+PlayerSkills0= -1
+PlayerSkills1= -1
+PlayerSkills2= -1
+PlayerSkills3= -1
+PlayerSkills4= -1
+PlayerSkills5= -1
+PlayerSkills6= -1
+PlayerSkills7= -1
+PlayerSkills8= -1
+
+[Version]
+VersionNumber= 124
+
+[Settings]
+MusicQuality= 0
+DetailTextures= 1
+FXDetail= 0
+EnvironmentalDetail= 0
+TrilinearFiltering= 0
+PreCacheAssets= 0
+DynamicLight= 0
+AnisotropicFiltering= 0
+EnvironmentMapping= 1
+MusicActive= 1
+PolyGridBumpmap= 0
+SoundQuality= 1
+ShellCasings= 0
+DetailLevel= 0
+TripleBuffering= 1
+ShadowDetail= 0
+Tracers= 1
+EnvironmentBumpMapping= 0
+PolyGridFresnel= 0
+
+[TeamDM]
+MaxPlayers= 16
+TimeLimit= 5
+TagScore= 1
+Team1Model= 0
+ReviveScore= 1
+NumTeams= 2
+Team0Name= "Blue"
+ScoreLimit= 30
+CampaignName= ".default"
+Rounds= 1
+Team1Name= "Red"
+FriendlyFire= FALSE
+SessionName= "�ʺ� �ųʹ�"
+RunSpeed= 140
+FragScore= 2
+Team0Model= 0
+
+[Survival]
+MaxPlayers= 16
+TimeLimit= 2
+TagScore= 1
+Team1Model= 0
+ReviveScore= 1
+NumTeams= 2
+Team0Name= "Blue"
+ScoreLimit= 0
+CampaignName= ".default"
+Rounds= 1
+Team1Name= "Red"
+FriendlyFire= FALSE
+SessionName= "�ʺ� �ųʹ�"
+RunSpeed= 140
+FragScore= 2
+Team0Model= 0
+
+[Details]
+XLargeTex= 2
+RegularTex= 1
+LargeTex= 1
+
+[AutoOptionSetting]
+CrossHairAuto= 1
+BloodDetail= 0
+ShowSpriteMark= 1
+FXNewOld= 0
+BloodDetailLevel= 0
+NewModel= 0
+FXNewOldLevel= 2
+ModelNewOldLevel= 2
+ModelNewOld= 0
+WeaponHold= 1
+WeaponDetail= 0
+ShowMinimap=1
+WindowMode= 0
+SoundPack= 1
+FootStepSound= 1
+ShowBloodFX= 0
+FXDetail= 0
+KoreanVoice= 0
+RejectWhisper= 0
+RejectInvite= 0
+SmokeDetail= 0
+Blood= 1
+ScreenWidth=1280
+ScreenHeight=1024
+ScreenBitdepth= 32
+LightMap= 1
+VsyncOnFlip=0
+ModelShadow= 1
+PolyGrid= 1
+Trilinear= 1
+Sprite= 1
+Tracer= 1
+Particle= 1
+CacheTexture= 1
+Weather= 0
+ShellCasing= 0
+DynaLight= 0
+ModelDetail= 2
+ShowPPL= 0
+AutoVote= 0
+NameRadar= 2
+LeftHandType= 0
+RadioLanguage= 0
+CrosshairStyle= 0
+CenterInfo= 1
+
+[Quest]
+ShowState= 1
+
+[Scouter]
+Showscouter= 1
+

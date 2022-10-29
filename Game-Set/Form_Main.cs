@@ -178,7 +178,7 @@ namespace Game_Set
             }
             fi.IsReadOnly = true;
 
-            Downloader(krokr("apex-autoexec"), Application.StartupPath+@"autoexec.cfg");
+            Downloader(krokr("apex-autoexec"), Application.StartupPath+@"\autoexec.cfg");
             string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
             File.WriteAllText("superglide.cfg", superglide);
         }

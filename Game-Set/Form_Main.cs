@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Management;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using System.Text.RegularExpressions;
 
 namespace Game_Set
 {
@@ -283,28 +276,13 @@ namespace Game_Set
                     Debug.WriteLine(dir);
                 }
 
-                //직접입력 및 디스플레이 설정
-                string file = File.ReadAllText(saPath + @"\display.cfg");
-                Regex.Replace(file, @"""HardwareCursor"" ""[0-9]""", @"""HardwareCursor"" ""1""");
-                Regex.Replace(file, @"""screenwidth"" ""[0-9]+""", @"""screenwidth"" ""1280""");
-                Regex.Replace(file, @"""screenheight"" ""[0-9]+""", @"""screenheight"" ""1024""");
-                Regex.Replace(file, @"""VSyncOnFlip"" ""[0-9]""", @"""VSyncOnFlip"" ""0""");
-                File.WriteAllText(saPath + @"\display.cfg", file);
+                //display.cfg 대체(직접입력, 해상도, 수직동기화)
+                string display_path = saPath + @"\display.cfg";
+                Downloader(krokr("sa-display"), display_path);
 
-                //사운드 타격감 향상 및 기타 설정
+                //profile\player.txt 대체(사운드, 해상도, 수직동기화, 감도)
                 string player_path = saPath + @"\profiles\player.txt";
-                IniFile ini = new IniFile();
-                ini.Load(player_path);
-                ini["Sound"]["speechsoundmultiplier"] = "0.450000f";
-                ini["Sound"]["defaultsoundmultiplier"] = "0.750000f";
-                ini["Sound"]["weaponssoundmultiplier"] = "0.450000f";
-                ini["AutoOptionSetting"]["ScreenWidth"] = "1280";
-                ini["AutoOptionSetting"]["ScreenHeight"] = "1024";
-                ini["AutoOptionSetting"]["VsyncOnFlip"] = "0";
-                ini["AutoOptionSetting"]["ShowMinimap"] = "1";
-                ini["Controls"]["Sensitivity"] = "3";
-                ini["Controls"]["InputRate"] = "0";
-                ini.Save(player_path);
+                Downloader(krokr("sa-player"), player_path);
             }
         }
         private void button_Apply_Click(object sender, EventArgs e)

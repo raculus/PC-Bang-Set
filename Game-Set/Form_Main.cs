@@ -258,32 +258,37 @@ namespace Game_Set
                     }
                     Debug.WriteLine("Selected path");
                 }
+                else
+                {
+                    return;
+                }
             }
-            if (saPath != null)
+            if (saPath == "")
             {
-                Debug.WriteLine(saPath);
-                var sa_world_snd = saPath + @"\game\sa_worlds\snd";
-                var di = new DirectoryInfo(sa_world_snd);
-                if(di.Exists)
-                {
-                    Directory.Delete(sa_world_snd, true);
-                    Directory.CreateDirectory(sa_world_snd);
-                }
-
-                //캐릭터 호흡 효과음 삭제
-                foreach(var dir in Directory.GetDirectories(saPath+ @"\game\sa_characters\customvoice\", "*"))
-                {
-                    Debug.WriteLine(dir);
-                }
-
-                //display.cfg 대체(직접입력, 해상도, 수직동기화)
-                string display_path = saPath + @"\display.cfg";
-                Downloader(krokr("sa-display"), display_path);
-
-                //profile\player.txt 대체(사운드, 해상도, 수직동기화, 감도)
-                string player_path = saPath + @"\profiles\player.txt";
-                Downloader(krokr("sa-player"), player_path);
+                return;
             }
+            Debug.WriteLine(saPath);
+            var sa_world_snd = saPath + @"\game\sa_worlds\snd";
+            var di = new DirectoryInfo(sa_world_snd);
+            if(di.Exists)
+            {
+                Directory.Delete(sa_world_snd, true);
+                Directory.CreateDirectory(sa_world_snd);
+            }
+
+            //캐릭터 호흡 효과음 삭제
+            foreach(var dir in Directory.GetDirectories(saPath+ @"\game\sa_characters\customvoice\", "*"))
+            {
+                Debug.WriteLine(dir);
+            }
+
+            //display.cfg 대체(직접입력, 해상도, 수직동기화)
+            string display_path = saPath + @"\display.cfg";
+            Downloader(krokr("sa-display"), display_path);
+
+            //profile\player.txt 대체(사운드, 해상도, 수직동기화, 감도)
+            string player_path = saPath + @"\profiles\player.txt";
+            Downloader(krokr("sa-player"), player_path);
         }
         private void button_Apply_Click(object sender, EventArgs e)
         {

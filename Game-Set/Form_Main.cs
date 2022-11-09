@@ -12,6 +12,8 @@ namespace Game_Set
 {
     public partial class Form_Main : Form
     {
+        Everything everything = new Everything();
+
         [Flags]
         public enum SPIF
         {
@@ -162,6 +164,13 @@ namespace Game_Set
         }
         private void apex_settings()
         {
+            string apex_path = "";
+            var list = everything.Search(@"Apex\r5apex.exe");
+            if(list.Count > 0)
+            {
+                apex_path = list[0].Replace(@"\r5apex.exe", "");
+            }
+
             string userPath = System.Environment.GetEnvironmentVariable("USERPROFILE");
             userPath += @"\Saved Games\Respawn\Apex\local\";
             ifNotExistDir(userPath);
@@ -178,9 +187,9 @@ namespace Game_Set
             }
             fi.IsReadOnly = true;
 
-            Downloader(krokr("apex-autoexec"), Application.StartupPath+@"\autoexec.cfg");
+            Downloader(krokr("apex-autoexec"), apex_path+@"\cfg\autoexec.cfg");
             string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
-            File.WriteAllText("superglide.cfg", superglide);
+            File.WriteAllText(apex_path+@"\cfg\superglide.cfg", superglide);
         }
         private void small_overwatch()
         {
@@ -232,14 +241,17 @@ namespace Game_Set
         private void sa_set()
         {
             string saPath = "";
-            RegistryKey reg = Registry.LocalMachine;
-            reg = reg.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SuddenAttack");
-            if(reg != null)
+            var list = everything.Search(@"SuddenAttack\SuddenAttack.exe");
+            foreach(var item in list)
             {
-                saPath = reg.GetValue("InstallLocation").ToString();
-                Debug.WriteLine("Registry find");
+                Debug.WriteLine(item);
+                if (item.Contains((@"SuddenAttack\suddenattack.exe")))
+                {
+                    saPath = item.Replace(@"\suddenattack.exe", "");
+                    break;
+                }
             }
-            else
+            if(saPath == "")
             {
                 string msg = "서든어택 폴더를 선택해 주세요";
                 MessageBox.Show(msg);

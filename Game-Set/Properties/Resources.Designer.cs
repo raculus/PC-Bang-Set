@@ -59,5 +59,25 @@ namespace PC_Bang_Set.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Everything {
+            get {
+                object obj = ResourceManager.GetObject("Everything", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Everything64 {
+            get {
+                object obj = ResourceManager.GetObject("Everything64", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

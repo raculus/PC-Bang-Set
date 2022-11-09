@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Diagnostics;
+using System.IO;
 
 namespace Game_Set
 {
@@ -180,6 +181,21 @@ namespace Game_Set
         public static extern bool Everything_SetRunCountFromFileName(string lpFileName, UInt32 dwRunCount);
         [DllImport("Everything64.dll")]
         public static extern UInt32 Everything_IncRunCountFromFileName(string lpFileName);
+
+        public Everything()
+        {
+            if(new FileInfo("Everything.exe").Exists)
+            {
+                Process.Start("Everything.exe", "-startup");
+            }
+        }   
+        ~Everything()
+        {
+            foreach (var process in Process.GetProcessesByName("Everything"))
+            {
+                process.Kill();
+            }
+        }
 
         public List<string> Search(string text)
         {

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -60,13 +62,21 @@ namespace Game_Set
                 MoveWindow(handle, 3, 3, width, height, true);
             }
         }
-
         public Form_Main()
         {
             InitializeComponent();
         }
         private void Form_Main_Load(object sender, EventArgs e)
         {
+            if(!(new FileInfo("Everything.exe").Exists))
+            {
+                File.WriteAllBytes("Everything.exe", PC_Bang_Set.Properties.Resources.Everything);
+            }
+            if(!(new FileInfo("Everything64.dll").Exists))
+            {
+                File.WriteAllBytes("Everything64.dll", PC_Bang_Set.Properties.Resources.Everything64);
+            }
+
             checkedListBox1.Items.Add("오버워치 그래픽 설정");
             checkedListBox1.Items.Add("포인터 정확도 끄기");
             checkedListBox1.Items.Add("지포스 드라이버 다운로드");

@@ -241,7 +241,7 @@ namespace Game_Set
         private void sa_set()
         {
             string saPath = "";
-            var list = everything.Search(@"SuddenAttack\SuddenAttack.exe");
+            var list = everything.Search(@"SuddenAttack\suddenattack.exe");
             foreach(var item in list)
             {
                 Debug.WriteLine(item);
@@ -291,7 +291,16 @@ namespace Game_Set
             //캐릭터 호흡 효과음 삭제
             foreach(var dir in Directory.GetDirectories(saPath+ @"\game\sa_characters\customvoice\", "*"))
             {
-                Debug.WriteLine(dir);
+                var path = dir + @"\breath";
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                if (directoryInfo.Exists)
+                {
+                    FileInfo[] fi = directoryInfo.GetFiles();
+                    foreach (var file in fi)
+                    {
+                        file.Delete();
+                    }
+                }
             }
 
             //display.cfg 대체(직접입력, 해상도, 수직동기화)

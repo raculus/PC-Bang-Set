@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -139,7 +140,14 @@ namespace Game_Set
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                client.DownloadFile(url, path);
+                try
+                {
+                    client.DownloadFile(url, path);
+                }
+                catch(WebException e)
+                {
+                    MessageBox.Show(e.InnerException.Message);
+                }
             }
         }
         private string readToURL(string url)

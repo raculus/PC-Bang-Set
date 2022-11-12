@@ -225,6 +225,7 @@ namespace Game_Set
                 StringBuilder stringBuilder = new StringBuilder(200);
                 Everything_GetResultFullPathName(i, stringBuilder, (UInt32)stringBuilder.Length);
                 list.Add(stringBuilder.ToString());
+                Debug.WriteLine(stringBuilder.ToString());
             }
             return list;
         }

@@ -197,9 +197,20 @@ namespace Game_Set
             }
             fi.IsReadOnly = true;
 
-            Downloader(krokr("apex-autoexec"), apex_path+@"\cfg\autoexec.cfg");
+            var autoexecPath = @"\cfg\autoexec.cfg";
+            var superglidePath = @"\cfg\superglide.cfg";
+
+            Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
             string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
-            File.WriteAllText(apex_path+@"\cfg\superglide.cfg", superglide);
+            File.WriteAllText(apex_path + superglidePath, superglide);
+
+            list = everything.Search(@"Apex Legends\r5apex.exe");
+            if(list.Count > 0)
+            {
+                var apex_path2 = list[0].Replace(@"\r5apex.exe", ""); ;
+                File.Copy(apex_path + autoexecPath, apex_path2 + autoexecPath, true);
+                File.Copy(apex_path + superglidePath, apex_path2 + superglidePath, true);
+            }
         }
         private void small_overwatch()
         {
@@ -252,14 +263,9 @@ namespace Game_Set
         {
             string saPath = "";
             var list = everything.Search(@"SuddenAttack\suddenattack.exe");
-            foreach(var item in list)
+            if(list.Count> 0)
             {
-                Debug.WriteLine(item);
-                if (item.Contains((@"SuddenAttack\suddenattack.exe")))
-                {
-                    saPath = item.Replace(@"\suddenattack.exe", "");
-                    break;
-                }
+                saPath = list[0].Replace(@"\suddenattack.exe", "");
             }
             if(saPath == "")
             {

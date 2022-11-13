@@ -227,32 +227,16 @@ namespace Game_Set
         }
         private void remove_pubg_intro()
         {
-            List<string> regList = new List<string>();
-            string path;
-            regList.Add(@"SOFTWARE\DaumGames\PUBG");
-            foreach (string regPath in regList)
+            var list = everything.Search(@"\TslGame\Content\Movies");
+            if(list.Count > 0)
             {
-                RegistryKey reg = Registry.CurrentUser.OpenSubKey(regPath);
-                if (reg != null)
+                string path = list[0];
+
+                var di = new DirectoryInfo(path);
+                if (di.Exists)
                 {
-                    var val = reg.GetValue("InstallPath");
-                    if (val != null)
-                    {
-                        path = val.ToString();
-                        path += @"\TslGame\Content\Movies";
-                        var di = new DirectoryInfo(path);
-                        if (di.Exists)
-                        {
-                            di.Delete(true);
-                            di.Create();
-                        }
-                    }
-                    else
-                        Debug.WriteLine("sub reg null");
-                }
-                else
-                {
-                    Debug.WriteLine("reg null");
+                    di.Delete(true);
+                    di.Create();
                 }
             }
         }

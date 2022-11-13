@@ -7,6 +7,7 @@ LuniparkAgent
 LuniparkDashboard
 vollehtv
 Lghub
+LGHub_Agent
 OP.GGforDesktop
 PFGMClient
 PFControlMgr

@@ -8,14 +8,17 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using PC_Bang_Set;
 
 namespace Game_Set
 {
     public partial class Form_Main : Form
     {
         Everything everything = new Everything();
+        double progress = 0;
 
         [Flags]
         public enum SPIF
@@ -63,6 +66,7 @@ namespace Game_Set
                 MoveWindow(handle, 3, 3, width, height, true);
             }
         }
+
         public Form_Main()
         {
             InitializeComponent();
@@ -182,13 +186,28 @@ namespace Game_Set
         }
         private void apex_settings()
         {
-            string apex_path = "";
+            var autoexecPath = @"\cfg\autoexec.cfg";
+            var superglidePath = @"\cfg\superglide.cfg";
+            string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
+
+            // cfg 파일 설정
             var list = everything.Search(@"Apex\r5apex.exe");
             if(list.Count > 0)
             {
-                apex_path = list[0].Replace(@"\r5apex.exe", "");
+                string apex_path = list[0].Replace(@"\r5apex.exe", "");
+
+                Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
+                File.WriteAllText(apex_path + superglidePath, superglide);
+            }
+            list = everything.Search(@"Apex Legends\r5apex.exe");
+            if (list.Count > 0)
+            {
+                string apex_path = list[0].Replace(@"\r5apex.exe", "");
+                Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
+                File.WriteAllText(apex_path + superglidePath, superglide);
             }
 
+            //videoconfig.txt 설정 (그래픽 옵션)
             string userPath = System.Environment.GetEnvironmentVariable("USERPROFILE");
             userPath += @"\Saved Games\Respawn\Apex\local\";
             ifNotExistDir(userPath);
@@ -205,20 +224,6 @@ namespace Game_Set
             }
             fi.IsReadOnly = true;
 
-            var autoexecPath = @"\cfg\autoexec.cfg";
-            var superglidePath = @"\cfg\superglide.cfg";
-
-            Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
-            string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
-            File.WriteAllText(apex_path + superglidePath, superglide);
-
-            list = everything.Search(@"Apex Legends\r5apex.exe");
-            if(list.Count > 0)
-            {
-                var apex_path2 = list[0].Replace(@"\r5apex.exe", ""); ;
-                File.Copy(apex_path + autoexecPath, apex_path2 + autoexecPath, true);
-                File.Copy(apex_path + superglidePath, apex_path2 + superglidePath, true);
-            }
         }
         private void small_overwatch()
         {
@@ -319,15 +324,25 @@ namespace Game_Set
             string player_path = saPath + @"\profiles\player.txt";
             Downloader(krokr("sa-player"), player_path);
         }
+        private void RunBattlenet()
+        {
+            string battlenet = @"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe";
+            if (File.Exists(battlenet))
+                Process.Start(battlenet);
+        }
+
         private void button_Apply_Click(object sender, EventArgs e)
         {
+            progressBar1.Maximum = checkedListBox1.CheckedItems.Count;
+
             foreach(string checkedItem in checkedListBox1.CheckedItems)
             {
+                progressBar1.PerformStep();
                 int index = checkedListBox1.Items.IndexOf(checkedItem);
                 if (index == 0)
                 {
                     //오버워치 그래픽 설정
-                    apply_ow_setting();
+                    new Thread(apply_ow_setting).Start();
                 }
                 else if (index == 1)
                 {
@@ -337,22 +352,22 @@ namespace Game_Set
                 else if (index == 2)
                 {
                     //지포스 드라이버 다운로드
-                    gpu_driver();
+                    new Thread(gpu_driver).Start();
                 }
                 else if (index == 3)
                 {
                     //불필요 프로세스 끄기
-                    kill_useless_process();
+                    new Thread(kill_useless_process).Start();
                 }
                 else if (index == 4)
                 {
-                    string battlenet = @"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe";
-                    if (File.Exists(battlenet))
-                        Process.Start(battlenet);
+                    new Thread(RunBattlenet).Start();
                 }
                 else if (index == 5)
                 {
-                    apex_settings();
+                    new Thread(apex_settings).Start();
+
+                    // 시작옵션 클립보드에 복사
                     Get get = new Get();
                     int freq = get.DisplayFreq();
 
@@ -361,26 +376,27 @@ namespace Game_Set
                     str += freq - 2 + "\"";
 
                     Clipboard.SetText(str);
+
                 }
                 else if (index == 6)
                 {
-                    small_overwatch();
+                    new Thread(small_overwatch).Start();
                 }
                 else if (index == 7)
                 {
-                    remove_pubg_intro();
+                    new Thread(remove_pubg_intro).Start();
                 }
                 else if (index == 8)
                 {
-                    download_omm();
+                    new Thread(download_omm);
                 }
                 else if (index == 9)
                 {
-                    sa_set();
+                    new Thread(sa_set).Start();
                 }
                 else
                 {
-                    download_saauto();
+                    new Thread(download_saauto).Start();
                 }
             }
             Application.Exit();

@@ -10,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace Game_Set
 {
@@ -182,12 +183,22 @@ namespace Game_Set
         [DllImport("Everything64.dll")]
         public static extern UInt32 Everything_IncRunCountFromFileName(string lpFileName);
 
+        private void StartProcess()
+        {
+            while (true)
+            {
+                if (new FileInfo("Everything.exe").Exists)
+                {
+                    Process.Start("Everything.exe", "-startup");
+                    break;
+                }
+            }
+        }
+
         public Everything()
         {
-            if(new FileInfo("Everything.exe").Exists)
-            {
-                Process.Start("Everything.exe", "-startup");
-            }
+            Thread thread = new Thread(StartProcess);
+            thread.Start();
         }   
         ~Everything()
         {

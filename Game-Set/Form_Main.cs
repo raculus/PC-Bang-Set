@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using PC_Bang_Set;
 
 namespace Game_Set
 {
@@ -142,11 +141,12 @@ namespace Game_Set
         {
             using (var client = new WebClient())
             {
+                client.Encoding = Encoding.UTF8;
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 try
                 {
-                    client.DownloadFile(url, path);
+                    client.DownloadFileAsync(new Uri(url), path);
                 }
                 catch(WebException e)
                 {
@@ -212,17 +212,14 @@ namespace Game_Set
             userPath += @"\Saved Games\Respawn\Apex\local\";
             ifNotExistDir(userPath);
             userPath += "videoconfig.txt";
+            Debug.WriteLine(userPath);
 
             FileInfo fi = new FileInfo(userPath);
             if (fi.Exists)
             {
                 fi.IsReadOnly = false;
             }
-            else
-            {
-                Downloader(krokr("apex-setting"), userPath);
-            }
-            fi.IsReadOnly = true;
+            Downloader(krokr("apex-setting"), userPath);
 
         }
         private void small_overwatch()
@@ -248,9 +245,9 @@ namespace Game_Set
         private void download_omm()
         {
             string url = krokr("omm");
-            var startInfo = new ProcessStartInfo("chrome.exe");
-            startInfo.Arguments = url;
-            Process.Start(startInfo);
+            string filename = Application.StartupPath + @"\Logitech OMM.exe";
+            Downloader(url, filename);
+            Process.Start(filename);
         }
         private void download_saauto()
         {

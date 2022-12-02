@@ -91,6 +91,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
             checkedListBox1.Items.Add("서든 설정");
+            checkedListBox1.Items.Add("NRS 다운로드");
             checkedListBox1.Items.Add("SAA 다운로드");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
@@ -253,6 +254,10 @@ namespace Game_Set
         {
             Downloader(krokr("sa"), Application.StartupPath + @"\notepad.exe");
         }
+        private void download_apexRecoil()
+        {
+            Downloader(krokr("apex-recoil"), Application.StartupPath + @"\NRS.exe");
+        }
         private void sa_set()
         {
             string saPath = "";
@@ -390,6 +395,10 @@ namespace Game_Set
                 else if (index == 9)
                 {
                     new Thread(sa_set).Start();
+                }
+                else if(checkedItem == "NRS 다운로드")
+                {
+                    new Thread(download_apexRecoil).Start();
                 }
                 else
                 {

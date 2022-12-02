@@ -10,7 +10,7 @@ SetWorkingDir %A_ScriptDir%
  
 Gui, Font, cGreen
 Gui, Font, s10
-Gui, Add, Text, x30 y10, Apex No Recoil By PACHARA
+Gui, Add, Text, x30 y10, NRS Custom
 Gui, Font, s12
 Gui, Add, Text, x30 y+15, Setting :
 Gui, Font, s10
@@ -20,10 +20,11 @@ Gui, Add, Text, x30 y+5, "F3" R99
 Gui, Add, Text, x30 y+5, "F4" Volt
 Gui, Add, Text, x30 y+5, "F5" Lstar
 Gui, Add, Text, x30 y+5, "6" Reset Script
+Gui, Add, Edit, x30 y+5 vEditSens, 1.76789
  
 Gui, -AlwaysOnTop
 Gui, Color, Black
-Gui, Show, w350 h450, NRS
+Gui, Show, w200 h250, NRS
  
 SetBatchLines -1                        
 #MaxHotkeysPerInterval 99000000
@@ -40,7 +41,7 @@ SetWinDelay, -1
 ;}
  
 ;-----edit-----
-sens:=1.35
+sens:=EditSens
 subjumpkey=9 ;sub jump bind 
 subshootkey=0 ;sub attack bind
  

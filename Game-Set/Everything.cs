@@ -210,6 +210,7 @@ namespace Game_Set
 
         public List<string> Search(string text)
         {
+            Debug.WriteLine("Everything search: " + text);
             UInt32 i;
 
             // set the search
@@ -236,7 +237,7 @@ namespace Game_Set
                 StringBuilder stringBuilder = new StringBuilder(200);
                 Everything_GetResultFullPathName(i, stringBuilder, (UInt32)stringBuilder.Length);
                 list.Add(stringBuilder.ToString());
-                Debug.WriteLine(stringBuilder.ToString());
+                Debug.WriteLine("Everything result: "+stringBuilder.ToString());
             }
             return list;
         }

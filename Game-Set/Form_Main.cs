@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq.Expressions;
 using System.Net;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.Win32;
+using System.ServiceProcess;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Game_Set
 {
     public partial class Form_Main : Form
     {
-        Everything everything = new Everything();
-        double progress = 0;
+        int freq = new Get().DisplayFreq();
+        readonly Everything everything = new Everything();
 
         [Flags]
         public enum SPIF
@@ -91,7 +89,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
             checkedListBox1.Items.Add("서든 설정");
-            checkedListBox1.Items.Add("NRS 다운로드");
+            checkedListBox1.Items.Add("서비스 중지");
             checkedListBox1.Items.Add("SAA 다운로드");
 
             for (int i = 0; i < checkedListBox1.Items.Count; i++)
@@ -114,6 +112,18 @@ namespace Game_Set
                 di.Create();
             }
         }
+        private void stopServices()
+        {
+            string[] services = { "WSearch", "SysMain", "LanmanWorkstation" };
+            foreach(string service in services)
+            {
+                ServiceController sc = new ServiceController(service);
+                if(sc.CanStop)
+                {
+                    sc.Stop();
+                }
+            }
+        }
 
         private void apply_ow_setting()
         {
@@ -122,20 +132,19 @@ namespace Game_Set
             ifNotExistDir(path);
             path += @"Settings_v0.ini";
             Downloader(krokr("ow-setting"), path);
+            
+                Get get = new Get();
+                var gpuInfo = get.GpuInfo();
 
-            Get get = new Get();
-            var gpuInfo = get.GpuInfo();
-            int freq = get.DisplayFreq();
+                IniFile ini = new IniFile();
+                ini.Load(path);
+                ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
+                ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
+                ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
 
-            IniFile ini = new IniFile();
-            ini.Load(path);
-            ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
-            ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
-            ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
-
-            ini["Render.13"]["FrameRateCap"] = freq-2;
-            ini["Render.13"]["FullScreenRefresh"] = freq;
-            ini.Save(path);
+                ini["Render.13"]["FrameRateCap"] = freq - 2;
+                ini["Render.13"]["FullScreenRefresh"] = freq;
+                ini.Save(path);
         }
 
         private void Downloader(string url, string path)
@@ -147,11 +156,13 @@ namespace Game_Set
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 try
                 {
-                    client.DownloadFileAsync(new Uri(url), path);
+                    client.DownloadFile(new Uri(url), path);
                 }
                 catch(WebException e)
                 {
                     MessageBox.Show(e.InnerException.Message);
+                    Debug.WriteLine("Downloader Error!!");
+                    Debug.WriteLine("URL: "+url+" / Path: " + path);
                 }
             }
         }
@@ -187,9 +198,17 @@ namespace Game_Set
         }
         private void apex_settings()
         {
+            // 시작옵션 클립보드에 복사
+            string str = readToURL(krokr("apex-startopt"));
+            str += " +fps_max \"";
+            str += freq - 2 + "\"";
+
+            Clipboard.SetText(str);
+
+
             var autoexecPath = @"\cfg\autoexec.cfg";
             var superglidePath = @"\cfg\superglide.cfg";
-            string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 190; exec autoexec.cfg\" 0";
+            string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 189; exec autoexec.cfg\" 0";
 
             // cfg 파일 설정
             var list = everything.Search(@"Apex\r5apex.exe");
@@ -198,14 +217,16 @@ namespace Game_Set
                 string apex_path = list[0].Replace(@"\r5apex.exe", "");
 
                 Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
-                File.WriteAllText(apex_path + superglidePath, superglide);
+                if(new FileInfo(apex_path + superglidePath).Exists)
+                    File.WriteAllText(apex_path + superglidePath, superglide);
             }
             list = everything.Search(@"Apex Legends\r5apex.exe");
             if (list.Count > 0)
             {
                 string apex_path = list[0].Replace(@"\r5apex.exe", "");
                 Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
-                File.WriteAllText(apex_path + superglidePath, superglide);
+                if (new FileInfo(apex_path + superglidePath).Exists)
+                    File.WriteAllText(apex_path + superglidePath, superglide);
             }
 
             //videoconfig.txt 설정 (그래픽 옵션)
@@ -246,9 +267,8 @@ namespace Game_Set
         private void download_omm()
         {
             string url = krokr("omm");
-            string filename = Application.StartupPath + @"\Logitech OMM.exe";
-            Downloader(url, filename);
-            Process.Start(filename);
+            Downloader(url, "OMM.exe");
+            Process.Start("OMM.exe");
         }
         private void download_saauto()
         {
@@ -336,6 +356,7 @@ namespace Game_Set
         private void button_Apply_Click(object sender, EventArgs e)
         {
             progressBar1.Maximum = checkedListBox1.CheckedItems.Count;
+            List<Thread> threads = new List<Thread>();
 
             foreach(string checkedItem in checkedListBox1.CheckedItems)
             {
@@ -344,7 +365,7 @@ namespace Game_Set
                 if (index == 0)
                 {
                     //오버워치 그래픽 설정
-                    new Thread(apply_ow_setting).Start();
+                    threads.Add(new Thread(apply_ow_setting));
                 }
                 else if (index == 1)
                 {
@@ -354,47 +375,40 @@ namespace Game_Set
                 else if (index == 2)
                 {
                     //지포스 드라이버 다운로드
-                    new Thread(gpu_driver).Start();
+                    threads.Add(new Thread(gpu_driver));
                 }
                 else if (index == 3)
                 {
                     //불필요 프로세스 끄기
-                    new Thread(kill_useless_process).Start();
+                    threads.Add(new Thread(kill_useless_process));
                 }
                 else if (index == 4)
                 {
-                    new Thread(RunBattlenet).Start();
+                    threads.Add(new Thread(RunBattlenet));
                 }
                 else if (index == 5)
                 {
-                    new Thread(apex_settings).Start();
-
-                    // 시작옵션 클립보드에 복사
-                    Get get = new Get();
-                    int freq = get.DisplayFreq();
-
-                    string str = readToURL(krokr("apex-startopt"));
-                    str += " +fps_max \"";
-                    str += freq - 2 + "\"";
-
-                    Clipboard.SetText(str);
-
+                    threads.Add(new Thread(apex_settings));
                 }
                 else if (index == 6)
                 {
-                    new Thread(small_overwatch).Start();
+                    threads.Add(new Thread(small_overwatch));
                 }
                 else if (index == 7)
                 {
-                    new Thread(remove_pubg_intro).Start();
+                    threads.Add(new Thread(remove_pubg_intro));
                 }
-                else if (index == 8)
+                else if (checkedItem == "로지텍OMM 다운로드")
                 {
-                    new Thread(download_omm);
+                    threads.Add(new Thread(download_omm));
                 }
                 else if (index == 9)
                 {
-                    new Thread(sa_set).Start();
+                    threads.Add(new Thread(sa_set));
+                }
+                else if (checkedItem == "서비스 중지")
+                {
+                    threads.Add(new Thread(stopServices));
                 }
                 else if(checkedItem == "NRS 다운로드")
                 {
@@ -402,10 +416,18 @@ namespace Game_Set
                 }
                 else
                 {
-                    new Thread(download_saauto).Start();
+                    threads.Add(new Thread(download_saauto));
                 }
             }
-            Application.Exit();
+            foreach(var thread in threads)
+            {
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+                thread.Join();
+            }
+
+            Task.WaitAll();
+            Debug.WriteLine("Done!");
         }
 
         private void checkBox_checkAll_CheckedChanged(object sender, EventArgs e)

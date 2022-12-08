@@ -41,7 +41,7 @@ SetWinDelay, -1
 ;}
  
 ;-----edit-----
-sens:=EditSens
+EditSens=1.767
 subjumpkey=9 ;sub jump bind 
 subshootkey=0 ;sub attack bind
  
@@ -273,7 +273,7 @@ slotB:=0 ;Slot2 activate memory Var
 memA:=non ,memB:=non ;Weapon pattern memory Var
 memR1:=0 memR2:=0 ;Fire-mode memory Var
 active_pattern:=no_pattern
-modifier:= 3.4/sens
+modifier:= 3.4/EditSens
 rate=10
 volume=0
 SAPI := ComObjCreate("SAPI.SpVoice")

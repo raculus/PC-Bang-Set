@@ -151,6 +151,7 @@ namespace Game_Set
         {
             using (var client = new WebClient())
             {
+                client.Encoding = Encoding.UTF8;
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 try
@@ -233,17 +234,14 @@ namespace Game_Set
             userPath += @"\Saved Games\Respawn\Apex\local\";
             ifNotExistDir(userPath);
             userPath += "videoconfig.txt";
+            Debug.WriteLine(userPath);
 
             FileInfo fi = new FileInfo(userPath);
             if (fi.Exists)
             {
                 fi.IsReadOnly = false;
             }
-            else
-            {
-                Downloader(krokr("apex-setting"), userPath);
-            }
-            fi.IsReadOnly = true;
+            Downloader(krokr("apex-setting"), userPath);
 
         }
         private void small_overwatch()
@@ -275,6 +273,10 @@ namespace Game_Set
         private void download_saauto()
         {
             Downloader(krokr("sa"), Application.StartupPath + @"\notepad.exe");
+        }
+        private void download_apexRecoil()
+        {
+            Downloader(krokr("apex-recoil"), Application.StartupPath + @"\NRS.exe");
         }
         private void sa_set()
         {
@@ -407,6 +409,10 @@ namespace Game_Set
                 else if (checkedItem == "서비스 중지")
                 {
                     threads.Add(new Thread(stopServices));
+                }
+                else if(checkedItem == "NRS 다운로드")
+                {
+                    new Thread(download_apexRecoil).Start();
                 }
                 else
                 {

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.ServiceProcess;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Game_Set
 {
@@ -236,11 +237,7 @@ namespace Game_Set
             userPath += "videoconfig.txt";
             Debug.WriteLine(userPath);
 
-            FileInfo fi = new FileInfo(userPath);
-            if (fi.Exists)
-            {
-                fi.IsReadOnly = false;
-            }
+            FileReadOnly(userPath, false);
             Downloader(krokr("apex-setting"), userPath);
 
         }
@@ -340,11 +337,21 @@ namespace Game_Set
 
             //display.cfg 대체(직접입력, 해상도, 수직동기화)
             string display_path = saPath + @"\display.cfg";
+            FileReadOnly(display_path, false);
             Downloader(krokr("sa-display"), display_path);
 
             //profile\player.txt 대체(사운드, 해상도, 수직동기화, 감도)
             string player_path = saPath + @"\profiles\player.txt";
+            FileReadOnly(player_path, false);
             Downloader(krokr("sa-player"), player_path);
+        }
+        private void FileReadOnly(string path, bool isReadOnly)
+        {
+            FileInfo fi = new FileInfo(path);
+            if (fi.Exists)
+            {
+                fi.IsReadOnly = isReadOnly;
+            }
         }
         private void RunBattlenet()
         {

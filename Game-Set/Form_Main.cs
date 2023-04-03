@@ -89,7 +89,6 @@ namespace Game_Set
             checkedListBox1.Items.Add("오버워치 더 작은창모드");
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
-            checkedListBox1.Items.Add("서든 설정");
             checkedListBox1.Items.Add("서비스 중지");
             checkedListBox1.Items.Add("SAA 다운로드");
 
@@ -275,76 +274,6 @@ namespace Game_Set
         {
             Downloader(krokr("apex-recoil"), Application.StartupPath + @"\NRS.exe");
         }
-        private void sa_set()
-        {
-            string saPath = "";
-            var list = everything.Search(@"SuddenAttack\suddenattack.exe");
-            if(list.Count> 0)
-            {
-                saPath = list[0].Replace(@"\suddenattack.exe", "");
-            }
-            if(saPath == "")
-            {
-                string msg = "서든어택 폴더를 선택해 주세요";
-                MessageBox.Show(msg);
-                FolderBrowserDialog fbd = new FolderBrowserDialog();
-                if (fbd.ShowDialog() == DialogResult.OK)
-                {
-                    string path = fbd.SelectedPath;
-                    if (path.Contains("SuddenAttack"))
-                    {
-                        saPath = path;
-                    }
-                    else
-                    {
-                        MessageBox.Show(msg);
-                        return;
-                    }
-                    Debug.WriteLine("Selected path");
-                }
-                else
-                {
-                    return;
-                }
-            }
-            if (saPath == "")
-            {
-                return;
-            }
-            Debug.WriteLine(saPath);
-            var sa_world_snd = saPath + @"\game\sa_worlds\snd";
-            var di = new DirectoryInfo(sa_world_snd);
-            if(di.Exists)
-            {
-                Directory.Delete(sa_world_snd, true);
-                Directory.CreateDirectory(sa_world_snd);
-            }
-
-            //캐릭터 호흡 효과음 삭제
-            foreach(var dir in Directory.GetDirectories(saPath+ @"\game\sa_characters\customvoice\", "*"))
-            {
-                var path = dir + @"\breath";
-                DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                if (directoryInfo.Exists)
-                {
-                    FileInfo[] fi = directoryInfo.GetFiles();
-                    foreach (var file in fi)
-                    {
-                        file.Delete();
-                    }
-                }
-            }
-
-            //display.cfg 대체(직접입력, 해상도, 수직동기화)
-            string display_path = saPath + @"\display.cfg";
-            FileReadOnly(display_path, false);
-            Downloader(krokr("sa-display"), display_path);
-
-            //profile\player.txt 대체(사운드, 해상도, 수직동기화, 감도)
-            string player_path = saPath + @"\profiles\player.txt";
-            FileReadOnly(player_path, false);
-            Downloader(krokr("sa-player"), player_path);
-        }
         private void FileReadOnly(string path, bool isReadOnly)
         {
             FileInfo fi = new FileInfo(path);
@@ -408,10 +337,6 @@ namespace Game_Set
                 else if (checkedItem == "로지텍OMM 다운로드")
                 {
                     threads.Add(new Thread(download_omm));
-                }
-                else if (index == 9)
-                {
-                    threads.Add(new Thread(sa_set));
                 }
                 else if (checkedItem == "서비스 중지")
                 {

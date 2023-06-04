@@ -71,11 +71,11 @@ namespace Game_Set
         }
         private void Form_Main_Load(object sender, EventArgs e)
         {
-            if(!(new FileInfo("Everything.exe").Exists))
+            if (!(new FileInfo("Everything.exe").Exists))
             {
                 File.WriteAllBytes("Everything.exe", PC_Bang_Set.Properties.Resources.Everything);
             }
-            if(!(new FileInfo("Everything64.dll").Exists))
+            if (!(new FileInfo("Everything64.dll").Exists))
             {
                 File.WriteAllBytes("Everything64.dll", PC_Bang_Set.Properties.Resources.Everything64);
             }
@@ -90,13 +90,18 @@ namespace Game_Set
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
             checkedListBox1.Items.Add("서비스 중지");
-            checkedListBox1.Items.Add("SAA 다운로드");
 
-            for (int i = 0; i < checkedListBox1.Items.Count; i++)
+            for(int i=0; i<checkedListBox1.Items.Count; i++)
             {
-                checkedListBox1.SetItemChecked(i, true);
+                bool isCheck = true;
+                string itemName = checkedListBox1.Items[i].ToString();
+                switch (itemName)
+                {
+                    case "지포스 드라이버 다운로드":
+                        isCheck = false; break;
+                }
+                checkedListBox1.SetItemChecked(i, isCheck);
             }
-            checkedListBox1.SetItemChecked(checkedListBox1.Items.Count-1, false);
         }
         private string krokr(string sub)
         {
@@ -341,10 +346,6 @@ namespace Game_Set
                 else if (checkedItem == "서비스 중지")
                 {
                     threads.Add(new Thread(stopServices));
-                }
-                else if(checkedItem == "NRS 다운로드")
-                {
-                    new Thread(download_apexRecoil).Start();
                 }
                 else
                 {

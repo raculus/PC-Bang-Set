@@ -365,7 +365,7 @@ namespace Game_Set
 
         private void checkBox_checkAll_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox_checkAll.Checked)
+            if (checkbox_CheckAll.Checked)
             {
                 for (int i = 0; i < checkedListBox1.Items.Count; i++)
                 {
@@ -379,6 +379,16 @@ namespace Game_Set
                     checkedListBox1.SetItemChecked(i, false);
                 }
             }
+        }
+
+        private void trackbar_Brightness_MouseUp(object sender, MouseEventArgs e)
+        {
+            Monitor.SetBrightness(trackbar_Brightness.Value);
+        }
+
+        private void trackbar_Brightness_KeyUp(object sender, KeyEventArgs e)
+        {
+            Monitor.SetBrightness(trackbar_Brightness.Value);
         }
     }
 }

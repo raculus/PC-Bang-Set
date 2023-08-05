@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-    class Get
+    class Gpu
     {
         [DllImport("user32.dll")]
         public static extern bool EnumDisplaySettings(
@@ -48,7 +48,7 @@ using System.Windows.Forms;
             public int dmDisplayFrequency;
 
         }
-        public int DisplayFreq()
+        public static int DisplayFreq()
         {
             DEVMODE vDevMode = new DEVMODE();
             int i = 0;
@@ -61,7 +61,7 @@ using System.Windows.Forms;
             return freq;
         }
 
-    private string GetComponent(string hwclass, string syntax)
+    private static string GetComponent(string hwclass, string syntax)
     {
         string result = null;
         ManagementObjectSearcher mos = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM " + hwclass);
@@ -71,7 +71,7 @@ using System.Windows.Forms;
         }
         return result;
     }
-    public (string Name, string VenderID, string DeviceID) GpuInfo()
+    public static (string Name, string VenderID, string DeviceID) GpuInfo()
     {
         string pnpId = GetComponent("Win32_VideoController", "PNPDeviceID");
         string[] idArr = pnpId.Split('&');

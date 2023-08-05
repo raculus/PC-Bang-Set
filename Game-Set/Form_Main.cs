@@ -16,7 +16,7 @@ namespace Game_Set
 {
     public partial class Form_Main : Form
     {
-        int freq = new Get().DisplayFreq();
+        int freq = Gpu.DisplayFreq();
         readonly Everything everything = new Everything();
 
         [Flags]
@@ -142,18 +142,17 @@ namespace Game_Set
             path += @"Settings_v0.ini";
             Downloader(krokr("ow-setting"), path);
             
-                Get get = new Get();
-                var gpuInfo = get.GpuInfo();
+            var gpuInfo = Gpu.GpuInfo();
 
-                IniFile ini = new IniFile();
-                ini.Load(path);
-                ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
-                ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
-                ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
+            IniFile ini = new IniFile();
+            ini.Load(path);
+            ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
+            ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
+            ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
 
-                ini["Render.13"]["FrameRateCap"] = freq - 2;
-                ini["Render.13"]["FullScreenRefresh"] = freq;
-                ini.Save(path);
+            ini["Render.13"]["FrameRateCap"] = freq - 2;
+            ini["Render.13"]["FullScreenRefresh"] = freq;
+            ini.Save(path);
         }
 
         private void Downloader(string url, string path)

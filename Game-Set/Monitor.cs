@@ -74,7 +74,7 @@ public class Monitor : IDisposable
         }
     }
 
-    public int Get()
+    public static int Get()
     {
         if (!Monitors.Any())
         {

@@ -10,6 +10,7 @@ using System.ServiceProcess;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Security.Policy;
 
 namespace Game_Set
 {
@@ -90,6 +91,7 @@ namespace Game_Set
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
             checkedListBox1.Items.Add("서비스 중지");
+            checkedListBox1.Items.Add("크롬 확장프로그램");
 
             for(int i=0; i<checkedListBox1.Items.Count; i++)
             {
@@ -102,6 +104,8 @@ namespace Game_Set
                 }
                 checkedListBox1.SetItemChecked(i, isCheck);
             }
+
+            trackbar_Brightness.Value = Monitor.Get();
         }
         private string krokr(string sub)
         {
@@ -201,6 +205,19 @@ namespace Game_Set
             startInfo.Arguments = url;
             Process.Start(startInfo);
         }
+        private void get_chrome_extension()
+        {
+            List<string> extensions = new List<string>();
+            extensions.Add("https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh");
+            extensions.Add("https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm");
+            extensions.Add("https://chrome.google.com/webstore/detail/better-youtube-shorts/icnidlkdlledahfgejnagmhgaeijokcp");
+            foreach(string extension in extensions)
+            {
+                var startInfo = new ProcessStartInfo("chrome.exe");
+                startInfo.Arguments = extension;
+                Process.Start(startInfo);
+            }
+        }
         private void apex_settings()
         {
             // 시작옵션 클립보드에 복사
@@ -271,14 +288,6 @@ namespace Game_Set
             Downloader(url, "OMM.exe");
             Process.Start("OMM.exe");
         }
-        private void download_saauto()
-        {
-            Downloader(krokr("sa"), Application.StartupPath + @"\notepad.exe");
-        }
-        private void download_apexRecoil()
-        {
-            Downloader(krokr("apex-recoil"), Application.StartupPath + @"\NRS.exe");
-        }
         private void FileReadOnly(string path, bool isReadOnly)
         {
             FileInfo fi = new FileInfo(path);
@@ -347,9 +356,9 @@ namespace Game_Set
                 {
                     threads.Add(new Thread(stopServices));
                 }
-                else
+                else if (checkedItem == "크롬 확장프로그램")
                 {
-                    threads.Add(new Thread(download_saauto));
+                    threads.Add(new Thread(get_chrome_extension));
                 }
             }
             foreach(var thread in threads)
@@ -389,6 +398,11 @@ namespace Game_Set
         private void trackbar_Brightness_KeyUp(object sender, KeyEventArgs e)
         {
             Monitor.SetBrightness(trackbar_Brightness.Value);
+        }
+
+        private void trackbar_Brightness_ValueChanged(object sender, EventArgs e)
+        {
+            label_MonitorBright.Text = "모니터 밝기: " + trackbar_Brightness.Value.ToString() + "%";
         }
     }
 }

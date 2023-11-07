@@ -209,7 +209,7 @@ namespace Game_Set
             List<string> extensions = new List<string>();
             extensions.Add("https://chrome.google.com/webstore/detail/dark-reader/eimadpbcbfnmbkopoojfekhnkhdbieeh");
             extensions.Add("https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm");
-            extensions.Add("https://chrome.google.com/webstore/detail/better-youtube-shorts/icnidlkdlledahfgejnagmhgaeijokcp");
+            extensions.Add("https://chromewebstore.google.com/detail/better-youtube-shorts/pehohlhkhbcfdneocgnfbnilppmfncdg?pli=1");
             foreach(string extension in extensions)
             {
                 var startInfo = new ProcessStartInfo("chrome.exe");

@@ -81,7 +81,8 @@ namespace Game_Set
                 File.WriteAllBytes("Everything64.dll", PC_Bang_Set.Properties.Resources.Everything64);
             }
 
-            checkedListBox1.Items.Add("오버워치 그래픽 설정");
+            checkedListBox1.Items.Add("오버워치 설정");
+            checkedListBox1.Items.Add("더파이널스 설정");
             checkedListBox1.Items.Add("포인터 정확도 끄기");
             checkedListBox1.Items.Add("지포스 드라이버 다운로드");
             checkedListBox1.Items.Add("불필요 프로세스 종료");
@@ -153,6 +154,14 @@ namespace Game_Set
             ini["Render.13"]["FrameRateCap"] = freq - 2;
             ini["Render.13"]["FullScreenRefresh"] = freq;
             ini.Save(path);
+        }
+
+        private void setting_thefinals()
+        {
+            const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/TheFinals/GameUserSettings.ini";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            path += @"\Discovery\Saved\Config\WindowsClient\GameUserSettings.ini";
+            Downloader(URL, path);
         }
 
         private void Downloader(string url, string path)
@@ -311,53 +320,44 @@ namespace Game_Set
             {
                 progressBar1.PerformStep();
                 int index = checkedListBox1.Items.IndexOf(checkedItem);
-                if (index == 0)
+                switch (checkedItem)
                 {
-                    //오버워치 그래픽 설정
-                    threads.Add(new Thread(apply_ow_setting));
-                }
-                else if (index == 1)
-                {
-                    //포인터 정확도 끄기
-                    PointerAccel(false);
-                }
-                else if (index == 2)
-                {
-                    //지포스 드라이버 다운로드
-                    threads.Add(new Thread(gpu_driver));
-                }
-                else if (index == 3)
-                {
-                    //불필요 프로세스 끄기
-                    threads.Add(new Thread(kill_useless_process));
-                }
-                else if (index == 4)
-                {
-                    threads.Add(new Thread(RunBattlenet));
-                }
-                else if (index == 5)
-                {
-                    threads.Add(new Thread(apex_settings));
-                }
-                else if (index == 6)
-                {
-                    threads.Add(new Thread(small_overwatch));
-                }
-                else if (index == 7)
-                {
-                    threads.Add(new Thread(remove_pubg_intro));
-                }
-                else if (checkedItem == "로지텍OMM 다운로드")
-                {
-                    threads.Add(new Thread(download_omm));
-                }
-                else if (checkedItem == "서비스 중지")
-                {
-                    threads.Add(new Thread(stopServices));
-                }
-                else if (checkedItem == "크롬 확장프로그램")
-                {
-                    threads.Add(new Thread(get_chrome_extension));
+                    case "오버워치 그래픽 설정":
+                        threads.Add(new Thread(apply_ow_setting));
+                        break;
+                    case "포인터 정확도 끄기":
+                        PointerAccel(false);
+                        break;
+                    case "더파이널스 설정":
+                        threads.Add(new Thread(setting_thefinals));
+                        break;
+                    case "지포스 드라이버 다운로드":
+                        threads.Add(new Thread(gpu_driver));
+                        break;
+                    case "불필요 프로세스 종료":
+                        threads.Add(new Thread(kill_useless_process));
+                        break;
+                    case "배틀넷 켜기":
+                        threads.Add(new Thread(RunBattlenet));
+                        break;
+                    case "에이펙스 설정":
+                        threads.Add(new Thread(apex_settings));
+                        break;
+                    case "오버워치 더 작은창모드":
+                        threads.Add(new Thread(small_overwatch));
+                        break;
+                    case "배틀그라운드 인트로 제거":
+                        threads.Add(new Thread(remove_pubg_intro));
+                        break;
+                    case "로지텍OMM 다운로드":
+                        threads.Add(new Thread(download_omm));
+                        break;
+                    case "서비스 중지":
+                        threads.Add(new Thread(stopServices));
+                        break;
+                    case "크롬 확장프로그램":
+                        threads.Add(new Thread(get_chrome_extension));
+                        break;
                 }
             }
             foreach(var thread in threads)

@@ -160,7 +160,9 @@ namespace Game_Set
         {
             const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/TheFinals/GameUserSettings.ini";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            path += @"\Discovery\Saved\Config\WindowsClient\GameUserSettings.ini";
+            path += @"\Discovery\Saved\Config\WindowsClient";
+            ifNotExistDir(path);
+            path += @"\GameUserSettings.ini";
             Downloader(URL, path);
         }
 
@@ -322,7 +324,7 @@ namespace Game_Set
                 int index = checkedListBox1.Items.IndexOf(checkedItem);
                 switch (checkedItem)
                 {
-                    case "오버워치 그래픽 설정":
+                    case "오버워치 설정":
                         threads.Add(new Thread(apply_ow_setting));
                         break;
                     case "포인터 정확도 끄기":

@@ -78,7 +78,7 @@ public class Monitor : IDisposable
     {
         if (!Monitors.Any())
         {
-            return -1;
+            throw new Exception();
         }
         return (int)Monitors.Average(d => d.CurrentValue);
     }

@@ -1,1 +1,0 @@
-+cl_showpos 1 -dev +exec autoexec +reticle_color "0 250 750"

@@ -93,6 +93,7 @@ namespace Game_Set
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.ProgressBarStyle = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.Size = new System.Drawing.Size(246, 21);
+            this.progressBar1.Step = 1;
             this.progressBar1.Style = MetroFramework.MetroColorStyle.Blue;
             this.progressBar1.StyleManager = null;
             this.progressBar1.TabIndex = 8;
@@ -166,8 +167,6 @@ namespace Game_Set
             this.trackbar_Brightness.Theme = MetroFramework.MetroThemeStyle.Dark;
             this.trackbar_Brightness.Value = 50;
             this.trackbar_Brightness.ValueChanged += new System.EventHandler(this.trackbar_Brightness_ValueChanged);
-            this.trackbar_Brightness.KeyUp += new System.Windows.Forms.KeyEventHandler(this.trackbar_Brightness_KeyUp);
-            this.trackbar_Brightness.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackbar_Brightness_MouseUp);
             // 
             // Form_Main
             // 

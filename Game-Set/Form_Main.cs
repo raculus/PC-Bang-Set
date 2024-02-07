@@ -2,69 +2,19 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.ServiceProcess;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using System.Security.Policy;
+using System.Net.Http;
+using System.Linq;
 
 namespace Game_Set
 {
     public partial class Form_Main : Form
     {
-        int freq = Gpu.DisplayFreq();
-        readonly Everything everything = new Everything();
-
-        [Flags]
-        public enum SPIF
-        {
-            None = 0x00,
-            /// <summary>Writes the new system-wide parameter setting to the user profile.</summary>
-            SPIF_UPDATEINIFILE = 0x01,
-            /// <summary>Broadcasts the WM_SETTINGCHANGE message after updating the user profile.</summary>
-            SPIF_SENDCHANGE = 0x02,
-            /// <summary>Same as SPIF_SENDCHANGE.</summary>
-            SPIF_SENDWININICHANGE = 0x02
-        }
-
-        // http://stackoverflow.com/questions/24737775/toggle-enhance-pointer-precision
-        // 포인터 정확도 향상 끄기용
-        [DllImport("user32.dll", EntryPoint = "SystemParametersInfo", SetLastError = true)]
-        public static extern bool SystemParametersInfoGet(uint action, uint param, IntPtr vparam, SPIF fWinIni);
-        [DllImport("user32.dll", EntryPoint = "SystemParametersInfo", SetLastError = true)]
-        public static extern bool SystemParametersInfoSet(uint action, uint param, IntPtr vparam, SPIF fWinIni);
-
-        public const UInt32 SPI_GETMOUSE = 0x0003;
-        public const UInt32 SPI_SETMOUSE = 0x0004;
-        // 창 사이즈 조절용
-        [DllImport("user32.dll", SetLastError = true)]
-        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-        public static bool PointerAccel(bool b)
-        {
-            int[] mouseParams = new int[3];
-            // Get the current values.
-            SystemParametersInfoGet(SPI_GETMOUSE, 0, GCHandle.Alloc(mouseParams, GCHandleType.Pinned).AddrOfPinnedObject(), 0);
-            // Modify the acceleration value as directed.
-            mouseParams[2] = b ? 1 : 0;
-            // Update the system setting.
-            return SystemParametersInfoSet(SPI_SETMOUSE, 0, GCHandle.Alloc(mouseParams, GCHandleType.Pinned).AddrOfPinnedObject(), SPIF.SPIF_SENDCHANGE);
-        }
-
-
-        private void ChangeWindowSize(string title, int width, int height)
-        {
-            Process[] proc = Process.GetProcessesByName(title);
-            foreach (Process p in proc)
-            {
-                IntPtr handle = p.MainWindowHandle;
-                MoveWindow(handle, 3, 3, width, height, true);
-            }
-        }
 
         public Form_Main()
         {
@@ -72,47 +22,30 @@ namespace Game_Set
         }
         private void Form_Main_Load(object sender, EventArgs e)
         {
-            if (!(new FileInfo("Everything.exe").Exists))
-            {
-                File.WriteAllBytes("Everything.exe", PC_Bang_Set.Properties.Resources.Everything);
-            }
-            if (!(new FileInfo("Everything64.dll").Exists))
-            {
-                File.WriteAllBytes("Everything64.dll", PC_Bang_Set.Properties.Resources.Everything64);
-            }
-
             checkedListBox1.Items.Add("오버워치 설정");
             checkedListBox1.Items.Add("더파이널스 설정");
+            checkedListBox1.Items.Add("에이펙스 설정");
             checkedListBox1.Items.Add("포인터 정확도 끄기");
-            checkedListBox1.Items.Add("지포스 드라이버 다운로드");
             checkedListBox1.Items.Add("불필요 프로세스 종료");
             checkedListBox1.Items.Add("배틀넷 켜기");
-            checkedListBox1.Items.Add("에이펙스 설정");
-            checkedListBox1.Items.Add("오버워치 더 작은창모드");
             checkedListBox1.Items.Add("배틀그라운드 인트로 제거");
             checkedListBox1.Items.Add("로지텍OMM 다운로드");
             checkedListBox1.Items.Add("서비스 중지");
             checkedListBox1.Items.Add("크롬 확장프로그램");
 
-            for(int i=0; i<checkedListBox1.Items.Count; i++)
-            {
-                bool isCheck = true;
-                string itemName = checkedListBox1.Items[i].ToString();
-                switch (itemName)
-                {
-                    case "지포스 드라이버 다운로드":
-                        isCheck = false; break;
-                }
-                checkedListBox1.SetItemChecked(i, isCheck);
+            for (int i=0; i<checkedListBox1.Items.Count; i++)
+            { 
+                checkedListBox1.SetItemChecked(i, true);
             }
 
-            trackbar_Brightness.Value = Monitor.Get();
-        }
-        private string krokr(string sub)
-        {
-            string url = @"http://";
-            url += sub + ".kotlin.kro.kr";
-            return url;
+            try
+            {
+                trackbar_Brightness.Value = Monitor.Get();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
         private void ifNotExistDir(string path)
         {
@@ -135,69 +68,73 @@ namespace Game_Set
             }
         }
 
-        private void apply_ow_setting()
+        private async Task settings_overwatchAsync()
         {
+            const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/Overwatch/Settings_v0.ini";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             path += @"\Overwatch\Settings\";
             ifNotExistDir(path);
             path += @"Settings_v0.ini";
-            Downloader(krokr("ow-setting"), path);
-            
-            var gpuInfo = Gpu.GpuInfo();
-
-            IniFile ini = new IniFile();
-            ini.Load(path);
-            ini["GPU.6"]["GPUDeviceID"] = "\"" + gpuInfo.DeviceID + "\"";
-            ini["GPU.6"]["GPUName"] = "\"" + gpuInfo.Name + "\"";
-            ini["GPU.6"]["GPUVenderID"] = "\"" + gpuInfo.VenderID + "\"";
-
-            ini["Render.13"]["FrameRateCap"] = freq - 2;
-            ini["Render.13"]["FullScreenRefresh"] = freq;
-            ini.Save(path);
+            await Downloader(URL, path);
         }
 
-        private void setting_thefinals()
+        private async Task settings_the_finals()
         {
             const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/TheFinals/GameUserSettings.ini";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             path += @"\Discovery\Saved\Config\WindowsClient";
             ifNotExistDir(path);
             path += @"\GameUserSettings.ini";
-            Downloader(URL, path);
+            await Downloader(URL, path);
         }
-
-        private void Downloader(string url, string path)
+        static async Task Downloader(string url, string path)
         {
-            using (var client = new WebClient())
+            using (HttpClient client = new HttpClient())
             {
-                client.Encoding = Encoding.UTF8;
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                try
+                using (HttpResponseMessage response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
                 {
-                    client.DownloadFile(new Uri(url), path);
-                }
-                catch(WebException e)
-                {
-                    MessageBox.Show(e.InnerException.Message);
-                    Debug.WriteLine("Downloader Error!!");
-                    Debug.WriteLine("URL: "+url+" / Path: " + path);
+                    response.EnsureSuccessStatusCode();
+
+                    try
+                    {
+                        using (var fileStream = File.Create(path))
+                        using (var httpStream = await response.Content.ReadAsStreamAsync())
+                        {
+                            await httpStream.CopyToAsync(fileStream);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"{ex.Message}");
+                        Debug.WriteLine($"Error: {ex.Message}");
+                    }
                 }
             }
         }
-        private string readToURL(string url)
+        static async Task<string> GetUrlContentAsync(string url)
         {
-            WebClient wc = new WebClient();
-            wc.Encoding = Encoding.UTF8;
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            using (HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(url);
 
-            string str = wc.DownloadString(url);
-            return str;
+                    response.EnsureSuccessStatusCode();
+
+                    string content = await response.Content.ReadAsStringAsync();
+                    return content;
+                }
+                catch (HttpRequestException ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    return null;
+                }
+            }
         }
-        private void kill_useless_process()
+        private async Task kill_processesAsync()
         {
-            string useless = readToURL(krokr("process"));
+            const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/kill_process.txt";
+            string useless = await GetUrlContentAsync(URL);
             foreach(string name in useless.Split('\n'))
             {
                 if (name == "")
@@ -207,13 +144,6 @@ namespace Game_Set
                 if(processList.Length > 0)
                     processList[0].Kill();
             }
-        }
-        private void gpu_driver()
-        {
-            string url = krokr("gpu");
-            var startInfo = new ProcessStartInfo("chrome.exe");
-            startInfo.Arguments = url;
-            Process.Start(startInfo);
         }
         private void get_chrome_extension()
         {
@@ -228,35 +158,28 @@ namespace Game_Set
                 Process.Start(startInfo);
             }
         }
-        private void apex_settings()
+        private async Task apex_settingsAsync()
         {
-            // 시작옵션 클립보드에 복사
-            string str = readToURL(krokr("apex-startopt"));
-            str += " +fps_max \"";
-            str += freq - 2 + "\"";
-
-            Clipboard.SetText(str);
-
-
             var autoexecPath = @"\cfg\autoexec.cfg";
             var superglidePath = @"\cfg\superglide.cfg";
             string superglide = "bind \"mouse1\" \"+jump; fps_max 30\" 0\r\nbind \"mouse2\" \"+duck; fps_max 189; exec autoexec.cfg\" 0";
 
             // cfg 파일 설정
-            var list = everything.Search(@"Apex\r5apex.exe");
+            const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/Apex/autoexec.cfg";
+            //var list = everything.Search(@"Apex\r5apex.exe");
+            var list = new List<string>();
             if(list.Count > 0)
             {
                 string apex_path = list[0].Replace(@"\r5apex.exe", "");
-
-                Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
+                await Downloader(URL, apex_path + autoexecPath);
                 if(new FileInfo(apex_path + superglidePath).Exists)
                     File.WriteAllText(apex_path + superglidePath, superglide);
             }
-            list = everything.Search(@"Apex Legends\r5apex.exe");
+            //list = everything.Search(@"Apex Legends\r5apex.exe");
             if (list.Count > 0)
             {
                 string apex_path = list[0].Replace(@"\r5apex.exe", "");
-                Downloader(krokr("apex-autoexec"), apex_path + autoexecPath);
+                await Downloader(URL, apex_path + autoexecPath);
                 if (new FileInfo(apex_path + superglidePath).Exists)
                     File.WriteAllText(apex_path + superglidePath, superglide);
             }
@@ -269,33 +192,20 @@ namespace Game_Set
             Debug.WriteLine(userPath);
 
             FileReadOnly(userPath, false);
-            Downloader(krokr("apex-setting"), userPath);
 
-        }
-        private void small_overwatch()
-        {
-            ChangeWindowSize("overwatch", 640, 480);
-            
+            const string VIDEOCONFIG_URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/Apex/videoconfig.txt";
+            await Downloader(VIDEOCONFIG_URL, userPath);
+
         }
         private void remove_pubg_intro()
         {
-            var list = everything.Search(@"\TslGame\Content\Movies");
-            if(list.Count > 0)
-            {
-                string path = list[0];
-
-                var di = new DirectoryInfo(path);
-                if (di.Exists)
-                {
-                    di.Delete(true);
-                    di.Create();
-                }
-            }
+            Debug.WriteLine($"remove_pubg_intro");
         }
-        private void download_omm()
+        private static async Task download_omm()
         {
-            string url = krokr("omm");
-            Downloader(url, "OMM.exe");
+            const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/OnboardMemoryManager.exe";
+            //Downloader(URL, "OMM.exe");
+            await Downloader(URL, "OMM.exe");
             Process.Start("OMM.exe");
         }
         private void FileReadOnly(string path, bool isReadOnly)
@@ -313,46 +223,48 @@ namespace Game_Set
                 Process.Start(battlenet);
         }
 
-        private void button_Apply_Click(object sender, EventArgs e)
+        private async void button_Apply_Click(object sender, EventArgs e)
         {
+            progressBar1.Value = 0;
             progressBar1.Maximum = checkedListBox1.CheckedItems.Count;
             List<Thread> threads = new List<Thread>();
 
-            foreach(string checkedItem in checkedListBox1.CheckedItems)
+            checkedListBox1.SelectedItem = null;
+            for (int i = 0; i < checkedListBox1.Items.Count; i++)
             {
+                if(!checkedListBox1.GetItemChecked(i))
+                {
+                    continue;
+                }
+                string checkedItem = checkedListBox1.Items[i].ToString();
+                checkedListBox1.SelectedItem = checkedItem;
+
                 progressBar1.PerformStep();
-                int index = checkedListBox1.Items.IndexOf(checkedItem);
                 switch (checkedItem)
                 {
                     case "오버워치 설정":
-                        threads.Add(new Thread(apply_ow_setting));
+                        await settings_overwatchAsync();
                         break;
                     case "포인터 정확도 끄기":
-                        PointerAccel(false);
+                        PointerAccel.Set(false);
                         break;
                     case "더파이널스 설정":
-                        threads.Add(new Thread(setting_thefinals));
-                        break;
-                    case "지포스 드라이버 다운로드":
-                        threads.Add(new Thread(gpu_driver));
+                        await settings_the_finals();
                         break;
                     case "불필요 프로세스 종료":
-                        threads.Add(new Thread(kill_useless_process));
+                        await kill_processesAsync();
                         break;
                     case "배틀넷 켜기":
                         threads.Add(new Thread(RunBattlenet));
                         break;
                     case "에이펙스 설정":
-                        threads.Add(new Thread(apex_settings));
-                        break;
-                    case "오버워치 더 작은창모드":
-                        threads.Add(new Thread(small_overwatch));
+                        await apex_settingsAsync();
                         break;
                     case "배틀그라운드 인트로 제거":
                         threads.Add(new Thread(remove_pubg_intro));
                         break;
                     case "로지텍OMM 다운로드":
-                        threads.Add(new Thread(download_omm));
+                        await download_omm();
                         break;
                     case "서비스 중지":
                         threads.Add(new Thread(stopServices));
@@ -371,39 +283,21 @@ namespace Game_Set
 
             Task.WaitAll();
             Debug.WriteLine("Done!");
+            checkedListBox1.SelectedItem = null;
         }
 
         private void checkBox_checkAll_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkbox_CheckAll.Checked)
+            for(int i=0; i< checkedListBox1.Items.Count; i++)
             {
-                for (int i = 0; i < checkedListBox1.Items.Count; i++)
-                {
-                    checkedListBox1.SetItemChecked(i, true);
-                }
+                checkedListBox1.SetItemChecked(i, checkbox_CheckAll.Checked);
             }
-            else
-            {
-                for (int i = 0; i < checkedListBox1.Items.Count; i++)
-                {
-                    checkedListBox1.SetItemChecked(i, false);
-                }
-            }
-        }
-
-        private void trackbar_Brightness_MouseUp(object sender, MouseEventArgs e)
-        {
-            Monitor.SetBrightness(trackbar_Brightness.Value);
-        }
-
-        private void trackbar_Brightness_KeyUp(object sender, KeyEventArgs e)
-        {
-            Monitor.SetBrightness(trackbar_Brightness.Value);
         }
 
         private void trackbar_Brightness_ValueChanged(object sender, EventArgs e)
         {
             label_MonitorBright.Text = "모니터 밝기: " + trackbar_Brightness.Value.ToString() + "%";
+            Monitor.SetBrightness(trackbar_Brightness.Value);
         }
     }
 }

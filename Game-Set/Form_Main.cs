@@ -68,7 +68,7 @@ namespace Game_Set
             }
         }
 
-        private async Task settings_overwatchAsync()
+        private async Task settings_overwatch()
         {
             const string URL = "https://github.com/raculus/PC-Bang-Set/raw/master/cfg/Overwatch/Settings_v0.ini";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -76,6 +76,16 @@ namespace Game_Set
             ifNotExistDir(path);
             path += @"Settings_v0.ini";
             await Downloader(URL, path);
+
+            var gpuInfo = Gpu.GpuInfo();
+
+            IniFile ini = new IniFile();
+            ini.Load(path);
+            ini["GPU.6"]["GPUDeviceID"] = '"' + gpuInfo.DeviceID + '"';
+            ini["GPU.6"]["GPUName"] = '"' + gpuInfo.Name + '"';
+            ini["GPU.6"]["GPUVenderID"] = '"' + gpuInfo.VenderID + '"';
+
+            ini.Save(path);
         }
 
         private async Task settings_the_finals()
@@ -158,7 +168,7 @@ namespace Game_Set
                 Process.Start(startInfo);
             }
         }
-        private async Task apex_settingsAsync()
+        private async Task apex_settings()
         {
             var autoexecPath = @"\cfg\autoexec.cfg";
             var superglidePath = @"\cfg\superglide.cfg";
@@ -225,6 +235,7 @@ namespace Game_Set
 
         private async void button_Apply_Click(object sender, EventArgs e)
         {
+            checkedListBox1.Enabled = false;
             progressBar1.Value = 0;
             progressBar1.Maximum = checkedListBox1.CheckedItems.Count;
             List<Thread> threads = new List<Thread>();
@@ -243,7 +254,7 @@ namespace Game_Set
                 switch (checkedItem)
                 {
                     case "오버워치 설정":
-                        await settings_overwatchAsync();
+                        await settings_overwatch();
                         break;
                     case "포인터 정확도 끄기":
                         PointerAccel.Set(false);
@@ -258,7 +269,7 @@ namespace Game_Set
                         threads.Add(new Thread(RunBattlenet));
                         break;
                     case "에이펙스 설정":
-                        await apex_settingsAsync();
+                        await apex_settings();
                         break;
                     case "배틀그라운드 인트로 제거":
                         threads.Add(new Thread(remove_pubg_intro));
@@ -284,6 +295,7 @@ namespace Game_Set
             Task.WaitAll();
             Debug.WriteLine("Done!");
             checkedListBox1.SelectedItem = null;
+            checkedListBox1.Enabled = true;
         }
 
         private void checkBox_checkAll_CheckedChanged(object sender, EventArgs e)

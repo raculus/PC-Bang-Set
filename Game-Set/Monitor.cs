@@ -78,7 +78,7 @@ public class Monitor : IDisposable
     {
         if (!Monitors.Any())
         {
-            throw new Exception();
+            throw new Exception("밝기 가져오기 실패");
         }
         return (int)Monitors.Average(d => d.CurrentValue);
     }

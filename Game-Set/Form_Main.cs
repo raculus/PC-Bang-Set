@@ -33,9 +33,14 @@ namespace Game_Set
             checkedListBox1.Items.Add("서비스 중지");
             checkedListBox1.Items.Add("크롬 확장프로그램");
 
-            for (int i=0; i<checkedListBox1.Items.Count; i++)
-            { 
-                checkedListBox1.SetItemChecked(i, true);
+            if (PC_Bang_Set.Properties.Settings.Default.isFirstRun)
+            {
+                for (int i = 0; i < checkedListBox1.Items.Count; i++)
+                {
+                    checkedListBox1.SetItemChecked(i, true);
+                }
+                button_Apply_Click(sender, e);
+                PC_Bang_Set.Properties.Settings.Default.isFirstRun = false;
             }
 
             try
